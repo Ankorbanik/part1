@@ -1,15 +1,11 @@
 <script>
 //<![CDATA[
 /* ================================================================
-   PART 1 — ULTIMATE CINEMATIC MODAL (v7 Merged Final)
-   ✓ Glassmorphism + Bento Grid
-   ✓ Watchmode API Kept (But UI Removed)
-   ✓ Fallback Recommendations
-   ✓ Filtered Actor Stack
-   ✓ Premium Uniform Action Buttons (Old logic + New Red Color)
+   PART 1 — ULTIMATE CINEMATIC MODAL (v6 Upgraded)
+   ✓ Premium Animated Ratings
    ✓ All Seasons/Episodes Grid (No Dropdown)
    ✓ Smart Server Sorting (Working Servers First)
-   ✓ Auto-Health Server Check
+   ✓ Removed "Where to Watch"
    ✓ Enhanced Details & Poster Size
 ================================================================ */
 
@@ -25,11 +21,11 @@
     .cv-modal-box { background: linear-gradient(135deg, #0a0a0f 0%, #14141c 55%, #0d0d14 100%); }
     #cv-m-hero-img { transition: opacity .4s ease; will-change: transform; }
     
-    /* ── Poster Size Optimization ── */
+    /* ── Poster Size Optimization (Feature 5) ── */
     .cv-m-poster { 
       box-shadow: 0 20px 60px rgba(229,9,20,.15), 0 8px 30px rgba(0,0,0,.7); 
       transition: transform .4s cubic-bezier(.4,0,.2,1); 
-      max-height: 340px;
+      max-height: 340px; /* Reduced height */
       width: auto;
       object-fit: cover;
       border-radius: 12px;
@@ -37,11 +33,11 @@
     .cv-m-poster:hover { transform: scale(1.03) translateY(-5px); }
     .cv-m-title { text-shadow: 0 4px 20px rgba(0,0,0,.85); }
 
-    /* ── Action Buttons (Uniform Premium Red) ── */
+    /* ── Action Buttons (Uniform - Feature 2) ── */
     .cv-modal-actions-bar { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; margin-top: 15px !important; width: 100%; }
     .cv-btn-play { padding: 12px 18px !important; font-size: 13px !important; border-radius: 25px !important; font-weight: 700 !important; display: flex !important; align-items: center; justify-content: center; gap: 8px; border: none; transition: all 0.3s; cursor: pointer; }
     
-    /* Both Watch and Download have the same premium red look */
+    /* All buttons now have the premium red look */
     .cv-btn-watch, .cv-btn-download { 
       background: linear-gradient(135deg, #e50914 0%, #b20710 100%) !important; 
       color: #fff !important; 
@@ -60,7 +56,7 @@
     .cvm-badge-gold { color:#ffd700; border-color:rgba(255,215,0,.35); background:rgba(255,215,0,.08); }
     .cvm-badge-imdb { color:#f5c518; border-color:rgba(245,197,24,.35); background:rgba(245,197,24,.08); }
 
-    /* ── Rating Rings (Premium Animated) ── */
+    /* ── Rating Rings (Feature 1 - More Premium) ── */
     .cvm-quick-stats { display:flex; flex-wrap:wrap; gap:16px; margin:25px 0; justify-content: center; }
     .cvm-stat-card { 
       position:relative; display:flex; flex-direction:column; align-items:center; gap:10px; 
@@ -92,7 +88,7 @@
     .cvm-keyword { padding:5px 13px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:20px; font-size:12px; color:#b3b3c4; font-weight:500; transition:all .25s; animation:cvmFadeUp .4s ease both; }
     .cvm-keyword:hover { background:rgba(229,9,20,.15); border-color:rgba(229,9,20,.5); color:#fff; transform:translateY(-2px); }
 
-    /* ── Bento Grid (Details) ── */
+    /* ── Bento Grid (Details - Feature 5) ── */
     .cvm-bento-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px; margin-top:20px; }
     .cvm-glass-card { 
       background:linear-gradient(145deg,rgba(30,33,40,0.85),rgba(15,17,22,0.95)); 
@@ -117,6 +113,7 @@
     .cvm-cast-img-wrap img { width:100%; height:100%; object-fit:cover; }
     .cvm-cast-name { font-size:12px; font-weight:700; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
     .cvm-cast-role { font-size:10px; color:#888; margin-top:2px; }
+    
     .cvm-crew-section { margin:24px 0; padding:20px; background:linear-gradient(135deg,rgba(255,255,255,.03),rgba(255,255,255,.01)); border:1px solid rgba(255,255,255,.06); border-radius:16px; }
     .cvm-crew-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
     .cvm-crew-item { padding:12px; background:rgba(0,0,0,.25); border-radius:8px; }
@@ -141,15 +138,8 @@
     .cvm-review-content { font-size:13px; line-height:1.6; color:#b3b3c4; }
 
     .cvm-recs-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:14px; }
-    .cvm-seasons-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:14px; }
-    .cvm-season-card { background:rgba(0,0,0,.3); border-radius:10px; overflow:hidden; transition:transform .3s; }
-    .cvm-season-card:hover { transform:translateY(-3px); }
-    .cvm-season-poster { width:100%; aspect-ratio:2/3; object-fit:cover; }
-    .cvm-season-info { padding:10px; }
-    .cvm-season-name { font-size:12px; font-weight:700; color:#fff; }
-    .cvm-season-meta { font-size:10px; color:#6b6b80; margin-top:3px; }
-
-    /* ── New Season/Episode Grid (All Seasons at once) ── */
+    
+    /* ── New Season/Episode Grid (Feature 3) ── */
     .cvm-season-block { margin-bottom: 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; }
     .cvm-season-header { font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;}
     .cv-episode-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:10px; }
@@ -173,6 +163,7 @@
     @keyframes cvmSlideDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
     @keyframes cvmKenBurns { 0% { transform:scale(1) translate(0,0); } 50% { transform:scale(1.08) translate(-1%,-1%); } 100% { transform:scale(1) translate(0,0); } }
     @keyframes cvmRingFill { to { stroke-dashoffset: var(--target-offset,0); } }
+    @keyframes cvmPulse { 0% { box-shadow: 0 0 0 0 rgba(229,9,20,0.4); } 70% { box-shadow: 0 0 0 10px rgba(229,9,20,0); } 100% { box-shadow: 0 0 0 0 rgba(229,9,20,0); } }
     
     @media (max-width:768px) {
       .cvm-quick-stats { gap:10px; }
@@ -299,17 +290,14 @@ var CVModal = {
     if (data.poster_path && posterEl) posterEl.src = 'https://image.tmdb.org/t/p/w500' + data.poster_path;
     if (titleEl) titleEl.textContent = data.title || data.name || 'Untitled';
 
-    // Fix Buttons Uniformity & Keep Old Logic (Merge Feature)
+    // Normalize Buttons & Apply red gradient to all (Feature 2)
     setTimeout(function normalizeActionButtons() {
       var dlLeft = document.getElementById('btn-download-left');
       var dlRight = document.getElementById('btn-download-right');
       if (!dlLeft || !dlRight) return;
       dlLeft.removeAttribute('style'); dlRight.removeAttribute('style');
-      
-      // Use old classes but CSS makes them red
-      dlLeft.className = 'cv-btn-play cv-btn-download'; 
-      dlRight.className = 'cv-btn-play cv-btn-download'; 
-      
+      dlLeft.className = 'cv-btn-play cv-btn-watch'; // Make it red!
+      dlRight.className = 'cv-btn-play cv-btn-watch'; // Make it red!
       var parent = dlLeft.parentElement;
       if (parent) {
         parent.classList.add('cv-modal-actions-bar');
@@ -319,9 +307,7 @@ var CVModal = {
         
         var type = CVModal.current.type; 
         var id = CVModal.current.id;
-        var tmdbUrl = 'https://www.themoviedb.org/' + type + '/' + id + '/watch';
-        
-        // Old Logic for click handlers
+        var tmdbUrl = 'https://www.themoviedb.org/' + type + '/' + id;
         dlLeft.onclick = function () { window.open(tmdbUrl, '_blank'); };
         dlRight.onclick = function () { window.open(tmdbUrl, '_blank'); };
       }
@@ -356,7 +342,7 @@ var CVModal = {
     if (metaR > 0) stats.push({ label: 'Meta', v: metaR, color: '#66cc33' });
 
     var html = '<div class="cvm-quick-stats">';
-    var C = 2 * Math.PI * 28; 
+    var C = 2 * Math.PI * 28; // Increased radius
     stats.forEach(function(s) {
       var off = C - (s.v / 10) * C;
       html += '<div class="cvm-stat-card"><div class="cvm-rating-ring"><svg width="70" height="70" viewBox="0 0 70 70"><circle class="ring-bg" cx="35" cy="35" r="28"/><circle class="ring-fill" cx="35" cy="35" r="28" style="stroke:' + s.color + '; stroke-dasharray:' + C + '; stroke-dashoffset:' + C + '; animation:cvmRingFill 1.5s ease-out forwards; --target-offset:' + off + '; filter: drop-shadow(0 0 6px ' + s.color + ');"/></svg><div class="ring-value" style="color:' + s.color + ';">' + s.v.toFixed(1) + '</div></div><div class="cvm-stat-label">' + s.label + '</div></div>';
@@ -396,7 +382,7 @@ var CVModal = {
       html += '<div class="cvm-glass-card cvm-awards-section" style="grid-column:1/-1; border-left: 4px solid #ffc107;"><div class="cvm-section-heading"><i class="fas fa-trophy" style="color:#ffc107;"></i> Awards & Achievements</div><div style="color:#ffd700;font-weight:600;font-size:15px;line-height:1.6;">' + CVM.esc(omdb.Awards) + '</div></div>';
     }
 
-    // Rich Detailed Bento Grid
+    // Rich Detailed Bento Grid (Feature 5)
     html += '<div class="cvm-glass-card"><div class="cvm-section-heading"><i class="fas fa-info-circle" style="color:#22d3ee;"></i> Details & Specs</div><div class="cvm-info-grid">';
     var details = [
       { label: 'Release', value: data.release_date || data.first_air_date, icon: 'fa-calendar' },
@@ -427,7 +413,7 @@ var CVModal = {
       html += '</div></div>';
     }
 
-    // "Where to Watch" is completely REMOVED as requested.
+    // "Where to Watch" has been completely REMOVED as requested (Feature 6).
 
     container.innerHTML = '<div class="cvm-bento-grid">' + html + '</div>';
   },
@@ -501,20 +487,6 @@ var CVModal = {
     html += '</div></div>';
     var recsWrap = document.getElementById('cv-recs-wrap');
     if (recsWrap && recsWrap.parentNode) { var temp = document.createElement('div'); temp.innerHTML = html; recsWrap.parentNode.insertBefore(temp.firstElementChild, recsWrap); }
-  },
-
-  _renderSeasons: function(data, type, myId) {
-    if (type !== 'tv') return;
-    var seasons = data.seasons || []; if (seasons.length === 0) return;
-    var existing = document.querySelector('.cvm-seasons-section'); if (existing) existing.remove();
-    var castGrid = document.getElementById('cv-cast-scroll'); var insertAfter = (castGrid && castGrid.parentNode) || null; if (!insertAfter) return;
-    var html = '<div class="cvm-seasons-section"><div class="cvm-section-heading"><i class="fas fa-list-ol"></i> Seasons</div><div class="cvm-seasons-grid">';
-    seasons.forEach(function(s, i) {
-      if (s.season_number === 0) return; var poster = s.poster_path ? 'https://image.tmdb.org/t/p/w185' + s.poster_path : null;
-      html += '<div class="cvm-season-card">' + (poster ? '<img class="cvm-season-poster" src="' + poster + '" loading="lazy" alt="">' : '') + '<div class="cvm-season-info"><div class="cvm-season-name">' + CVM.esc(s.name) + '</div><div class="cvm-season-meta">' + (s.episode_count || 0) + ' eps</div></div></div>';
-    });
-    html += '</div></div>';
-    var temp = document.createElement('div'); temp.innerHTML = html; insertAfter.insertAdjacentElement('afterend', temp.firstElementChild);
   },
 
   _renderAnalytics: function(data, omdb, myId) {
@@ -614,7 +586,7 @@ var CVActor = {
 };
 
 /* ═══════════════════════════════════════════════
-   5. PLAYER — v5 MERGED (All Seasons Grid + Auto-Health Check)
+   5. PLAYER — v4 MERGED (Grid Episodes + Server Sorting)
 ═══════════════════════════════════════════════ */
 var CVPlayer = {
   activeServer: 0,
@@ -645,13 +617,14 @@ var CVPlayer = {
     var self = this;
     var health = window.CVServerHealth;
 
-    // Sort servers so working ones come first (Feature 4)
+    // Feature 4: Sort servers so working ones come first
     var sortedServers = [...window.CV_SERVERS].sort(function(a, b) {
       var aWorking = health && health.workingServers && health.workingServers.some(function(w){ return w.id === a.id; }) ? 1 : 0;
       var bWorking = health && health.workingServers && health.workingServers.some(function(w){ return w.id === b.id; }) ? 1 : 0;
       return bWorking - aWorking; 
     });
     
+    // Update global array so load() uses the new order
     window.CV_SERVERS = sortedServers; 
     
     var defaultId = (window.CV_CONFIG && CV_CONFIG.defaultServer) || '';
@@ -686,12 +659,10 @@ var CVPlayer = {
     var s = document.getElementById('cv-player-section');
     if (s) { s.style.display = 'block'; s.classList.add('cv-active'); }
 
-    // ১. TV হলে সব সিজন একসাথে দেখাও (No Dropdown)
     if (CVModal.current && CVModal.current.type === 'tv') {
       this._renderAllSeasons(CVModal.current.id, CVModal.current.data);
     }
 
-    // ২. Auto-Health Check
     if (!this._serverTestingDone) {
       this._serverTestingDone = true;
       var health = window.CVServerHealth;
@@ -710,6 +681,7 @@ var CVPlayer = {
     this.load(true);
   },
 
+  // Feature 3: Load all seasons instead of dropdown
   _renderAllSeasons: async function(tvId, data) {
     var wrap = document.getElementById('cv-tv-selector');
     if (!wrap) {
@@ -731,6 +703,7 @@ var CVPlayer = {
     var self = this;
     var html = '<div class="cv-tv-controls" style="background:transparent; border:none; padding:0;">';
     
+    // Create UI block for each season
     validSeasons.forEach(function(s) {
       html += `<div class="cvm-season-block" id="season-block-${s.season_number}">
                  <div class="cvm-season-header">
@@ -746,6 +719,7 @@ var CVPlayer = {
     html += '</div>';
     wrap.innerHTML = html;
 
+    // Load episodes for all seasons concurrently
     validSeasons.forEach(function(s) {
       self._loadEpisodesForBlock(tvId, s.season_number);
     });
@@ -791,11 +765,13 @@ var CVPlayer = {
     this.currentSeason = season;
     this.currentEpisode = episode;
     
+    // Remove active state from all buttons
     document.querySelectorAll('.cv-episode-btn').forEach(function(b) { b.classList.remove('cv-active'); });
+    // Add to clicked
     if (btnElement) btnElement.classList.add('cv-active');
     
     this.load(false);
-    this._serverTestingDone = false; // Re-check servers for the new episode
+    this._serverTestingDone = false; // Re-check servers for this new episode
     
     var playerWrap = document.getElementById('cv-player-section');
     if (playerWrap) playerWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -866,6 +842,6 @@ window.addEventListener('popstate', function(e) {
   else { CVModal.close(true); var fp = document.getElementById('cv-full-page'); if (fp && fp.classList.contains('active') && window.CVCategory) CVCategory.closeFullPage(true); }
 });
 
-console.info('[CineVault] ✓ Part 1 v7 Merged Final loaded — Nothing Lost, Everything Gained');
+console.info('[CineVault] ✓ Part 1 v6 Upgraded loaded — All Features Applied');
 //]]>
 </script>
