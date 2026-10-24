@@ -1,12 +1,14 @@
 <script>
 //<![CDATA[
 /* ================================================================
-   PART 1 — ULTIMATE CINEMATIC MODAL (v6 Upgraded)
-   ✓ Premium Animated Ratings
-   ✓ All Seasons/Episodes Grid (No Dropdown)
-   ✓ Smart Server Sorting (Working Servers First)
-   ✓ Removed "Where to Watch"
-   ✓ Enhanced Details & Poster Size
+   PART 1 — ULTIMATE CINEMATIC MODAL (v5 Final + TV Player Merged)
+   ✓ Glassmorphism + Bento Grid
+   ✓ Watchmode Integration (Worker)
+   ✓ Fallback Recommendations
+   ✓ Filtered Actor Stack
+   ✓ Uniform Action Buttons
+   ✓ TV Season/Episode Selector (MERGED)
+   ✓ Auto-Health Server Check (MERGED)
 ================================================================ */
 
 /* ═══════════════════════════════════════════════
@@ -20,34 +22,17 @@
     /* ── Base modal ── */
     .cv-modal-box { background: linear-gradient(135deg, #0a0a0f 0%, #14141c 55%, #0d0d14 100%); }
     #cv-m-hero-img { transition: opacity .4s ease; will-change: transform; }
-    
-    /* ── Poster Size Optimization (Feature 5) ── */
-    .cv-m-poster { 
-      box-shadow: 0 20px 60px rgba(229,9,20,.15), 0 8px 30px rgba(0,0,0,.7); 
-      transition: transform .4s cubic-bezier(.4,0,.2,1); 
-      max-height: 340px; /* Reduced height */
-      width: auto;
-      object-fit: cover;
-      border-radius: 12px;
-    }
+    .cv-m-poster { box-shadow: 0 20px 60px rgba(229,9,20,.15), 0 8px 30px rgba(0,0,0,.7); transition: transform .4s cubic-bezier(.4,0,.2,1); }
     .cv-m-poster:hover { transform: scale(1.03) translateY(-5px); }
     .cv-m-title { text-shadow: 0 4px 20px rgba(0,0,0,.85); }
 
-    /* ── Action Buttons (Uniform - Feature 2) ── */
+    /* ── Action Buttons (Uniform) ── */
     .cv-modal-actions-bar { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; margin-top: 15px !important; width: 100%; }
     .cv-btn-play { padding: 12px 18px !important; font-size: 13px !important; border-radius: 25px !important; font-weight: 700 !important; display: flex !important; align-items: center; justify-content: center; gap: 8px; border: none; transition: all 0.3s; cursor: pointer; }
-    
-    /* All buttons now have the premium red look */
-    .cv-btn-watch, .cv-btn-download { 
-      background: linear-gradient(135deg, #e50914 0%, #b20710 100%) !important; 
-      color: #fff !important; 
-      box-shadow: 0 4px 15px rgba(229,9,20,0.4); 
-      border: 1px solid rgba(255,255,255,0.1) !important;
-    }
-    .cv-btn-watch:hover, .cv-btn-download:hover { 
-      transform: scale(1.05); 
-      box-shadow: 0 8px 25px rgba(229,9,20,0.6); 
-    }
+    .cv-btn-watch { background: linear-gradient(135deg, #e50914 0%, #b20710 100%) !important; color: #fff !important; box-shadow: 0 4px 15px rgba(229,9,20,0.4); }
+    .cv-btn-watch:hover { transform: scale(1.05); box-shadow: 0 8px 25px rgba(229,9,20,0.6); }
+    .cv-btn-download { background: rgba(255,255,255,0.08) !important; color: #fff !important; border: 1px solid rgba(255,255,255,0.15) !important; }
+    .cv-btn-download:hover { background: rgba(255,255,255,0.15) !important; transform: translateY(-2px); }
     @media(max-width: 600px) { .cv-modal-actions-bar { grid-template-columns: 1fr !important; } }
 
     /* ── Badges ── */
@@ -56,28 +41,17 @@
     .cvm-badge-gold { color:#ffd700; border-color:rgba(255,215,0,.35); background:rgba(255,215,0,.08); }
     .cvm-badge-imdb { color:#f5c518; border-color:rgba(245,197,24,.35); background:rgba(245,197,24,.08); }
 
-    /* ── Rating Rings (Feature 1 - More Premium) ── */
-    .cvm-quick-stats { display:flex; flex-wrap:wrap; gap:16px; margin:25px 0; justify-content: center; }
-    .cvm-stat-card { 
-      position:relative; display:flex; flex-direction:column; align-items:center; gap:10px; 
-      padding:20px 25px; min-width:110px; 
-      background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02)); 
-      border:1px solid rgba(255,255,255,.1); border-radius:20px; backdrop-filter:blur(25px); 
-      overflow:hidden; transition:all .4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
-    .cvm-stat-card:hover { 
-      transform:translateY(-8px) scale(1.05); 
-      border-color:rgba(229,9,20,.6); 
-      box-shadow:0 15px 40px rgba(229,9,20,.3), inset 0 0 20px rgba(229,9,20,0.1); 
-    }
-    .cvm-rating-ring { position:relative; width:70px; height:70px; }
+    /* ── Rating Rings ── */
+    .cvm-quick-stats { display:flex; flex-wrap:wrap; gap:12px; margin:22px 0; }
+    .cvm-stat-card { position:relative; display:flex; flex-direction:column; align-items:center; gap:8px; padding:16px 20px; min-width:92px; background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.01)); border:1px solid rgba(255,255,255,.08); border-radius:16px; backdrop-filter:blur(20px); overflow:hidden; transition:all .35s; }
+    .cvm-stat-card:hover { transform:translateY(-4px); border-color:rgba(229,9,20,.4); box-shadow:0 10px 30px rgba(229,9,20,.18); }
+    .cvm-rating-ring { position:relative; width:60px; height:60px; }
     .cvm-rating-ring svg { transform:rotate(-90deg); }
-    .cvm-rating-ring .ring-bg { fill:none; stroke:rgba(255,255,255,.08); stroke-width:5; }
-    .cvm-rating-ring .ring-fill { fill:none; stroke-width:5; stroke-linecap:round; }
-    .cvm-rating-ring .ring-value { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:18px; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
-    .cvm-stat-label { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#aaa; }
-    .cvm-stat-num { font-size:28px; font-weight:900; color:#fff; text-shadow: 0 0 15px rgba(255,255,255,0.3); }
+    .cvm-rating-ring .ring-bg { fill:none; stroke:rgba(255,255,255,.08); stroke-width:4; }
+    .cvm-rating-ring .ring-fill { fill:none; stroke-width:4; stroke-linecap:round; }
+    .cvm-rating-ring .ring-value { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; }
+    .cvm-stat-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:#888; }
+    .cvm-stat-num { font-size:24px; font-weight:800; color:#fff; }
 
     /* ── Tagline & Keywords ── */
     .cvm-tagline { position:relative; padding:12px 0 12px 20px; border-left:3px solid #e50914; font-style:italic; font-size:15px; color:#d0d0d8; margin-bottom:16px; line-height:1.5; animation:cvmFadeUp .6s ease; }
@@ -88,21 +62,23 @@
     .cvm-keyword { padding:5px 13px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:20px; font-size:12px; color:#b3b3c4; font-weight:500; transition:all .25s; animation:cvmFadeUp .4s ease both; }
     .cvm-keyword:hover { background:rgba(229,9,20,.15); border-color:rgba(229,9,20,.5); color:#fff; transform:translateY(-2px); }
 
-    /* ── Bento Grid (Details - Feature 5) ── */
-    .cvm-bento-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px; margin-top:20px; }
-    .cvm-glass-card { 
-      background:linear-gradient(145deg,rgba(30,33,40,0.85),rgba(15,17,22,0.95)); 
-      backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,0.08); 
-      border-radius:20px; padding:24px; box-shadow:0 15px 35px rgba(0,0,0,0.4); 
-      transition:all .4s ease; animation: cvmFadeUp 0.6s ease both;
-    }
-    .cvm-glass-card:hover { border-color:rgba(229,9,20,0.4); transform:translateY(-4px); box-shadow:0 20px 45px rgba(229,9,20,0.15); }
-    .cvm-section-heading { display:flex; align-items:center; gap:10px; font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:1.2px; color:#fff; margin-bottom:20px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:12px; }
-    .cvm-info-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:16px; }
-    .cvm-info-item { padding:16px; background:rgba(0,0,0,.35); border-left:4px solid rgba(34,211,238,.6); border-radius:10px; transition:all .3s; animation: cvmFadeUp 0.5s ease both; }
-    .cvm-info-item:hover { background:rgba(255,255,255,.05); transform:translateX(5px); }
-    .cvm-info-label { display:flex; align-items:center; gap:8px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.8px; color:#22d3ee; margin-bottom:8px; }
-    .cvm-info-value { font-size:14px; font-weight:600; color:#fff; line-height:1.5; }
+    /* ── Bento Grid (Details) ── */
+    .cvm-bento-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; margin-top:15px; }
+    .cvm-glass-card { background:linear-gradient(145deg,rgba(30,33,40,0.7),rgba(18,20,25,0.9)); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.06); border-radius:16px; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,0.2); transition:all .3s; }
+    .cvm-glass-card:hover { border-color:rgba(229,9,20,0.3); transform:translateY(-2px); }
+    .cvm-section-heading { display:flex; align-items:center; gap:10px; font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:1.2px; color:#fff; margin-bottom:16px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:10px; }
+    .cvm-info-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; }
+    .cvm-info-item { padding:12px 14px; background:rgba(0,0,0,.25); border-left:3px solid rgba(34,211,238,.5); border-radius:6px; transition:all .25s; }
+    .cvm-info-label { display:flex; align-items:center; gap:6px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:#6b6b80; margin-bottom:5px; }
+    .cvm-info-value { font-size:13px; font-weight:600; color:#e5e5e5; line-height:1.4; }
+
+    /* ── Watch Providers ── */
+    .cvm-wtw-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px; }
+    .cvm-wtw-item { display:flex; align-items:center; gap:10px; padding:10px 12px; background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08); border-radius:10px; text-decoration:none; color:#fff; transition:all .25s; }
+    .cvm-wtw-item:hover { background:rgba(255,255,255,.08); border-color:rgba(34,211,238,.4); transform:translateY(-2px); }
+    .cvm-wtw-item img { width:32px; height:32px; border-radius:8px; object-fit:cover; }
+    .cvm-wtw-name { font-size:12px; font-weight:700; color:#fff; }
+    .cvm-wtw-type { font-size:10px; color:#6b6b80; text-transform:uppercase; letter-spacing:.5px; }
 
     /* ── Cast & Crew ── */
     .cvm-cast-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:14px; padding:4px 0; }
@@ -113,7 +89,6 @@
     .cvm-cast-img-wrap img { width:100%; height:100%; object-fit:cover; }
     .cvm-cast-name { font-size:12px; font-weight:700; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
     .cvm-cast-role { font-size:10px; color:#888; margin-top:2px; }
-    
     .cvm-crew-section { margin:24px 0; padding:20px; background:linear-gradient(135deg,rgba(255,255,255,.03),rgba(255,255,255,.01)); border:1px solid rgba(255,255,255,.06); border-radius:16px; }
     .cvm-crew-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
     .cvm-crew-item { padding:12px; background:rgba(0,0,0,.25); border-radius:8px; }
@@ -138,17 +113,13 @@
     .cvm-review-content { font-size:13px; line-height:1.6; color:#b3b3c4; }
 
     .cvm-recs-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:14px; }
-    
-    /* ── New Season/Episode Grid (Feature 3) ── */
-    .cvm-season-block { margin-bottom: 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; }
-    .cvm-season-header { font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;}
-    .cv-episode-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:10px; }
-    .cv-episode-btn { display:flex; flex-direction:column; gap:4px; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:10px; color:#e5e5e5; cursor:pointer; text-align:left; transition:all 0.2s; font-family:inherit; }
-    .cv-episode-btn:hover { background:rgba(229,9,20,0.15); border-color:#e50914; transform:translateY(-2px); }
-    .cv-episode-btn.cv-active { background:rgba(229,9,20,0.3); border-color:#e50914; box-shadow:0 4px 15px rgba(229,9,20,0.3); }
-    .cv-ep-num { font-size:11px; font-weight:800; color:#22d3ee; text-transform:uppercase; }
-    .cv-episode-btn.cv-active .cv-ep-num { color:#fff; }
-    .cv-ep-name { font-size:12px; font-weight:600; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .cvm-seasons-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:14px; }
+    .cvm-season-card { background:rgba(0,0,0,.3); border-radius:10px; overflow:hidden; transition:transform .3s; }
+    .cvm-season-card:hover { transform:translateY(-3px); }
+    .cvm-season-poster { width:100%; aspect-ratio:2/3; object-fit:cover; }
+    .cvm-season-info { padding:10px; }
+    .cvm-season-name { font-size:12px; font-weight:700; color:#fff; }
+    .cvm-season-meta { font-size:10px; color:#6b6b80; margin-top:3px; }
 
     /* ── Actor Layer ── */
     .cvm-actor-layer { margin:24px 0; padding:20px; background:linear-gradient(135deg,rgba(229,9,20,.05),rgba(34,211,238,.03)); border:1px solid rgba(229,9,20,.15); border-radius:16px; animation:cvmSlideDown .4s ease; }
@@ -163,16 +134,12 @@
     @keyframes cvmSlideDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
     @keyframes cvmKenBurns { 0% { transform:scale(1) translate(0,0); } 50% { transform:scale(1.08) translate(-1%,-1%); } 100% { transform:scale(1) translate(0,0); } }
     @keyframes cvmRingFill { to { stroke-dashoffset: var(--target-offset,0); } }
-    @keyframes cvmPulse { 0% { box-shadow: 0 0 0 0 rgba(229,9,20,0.4); } 70% { box-shadow: 0 0 0 10px rgba(229,9,20,0); } 100% { box-shadow: 0 0 0 0 rgba(229,9,20,0); } }
     
     @media (max-width:768px) {
-      .cvm-quick-stats { gap:10px; }
-      .cvm-stat-card { min-width:80px; padding:15px; }
-      .cvm-rating-ring { width: 50px; height: 50px; }
-      .cvm-rating-ring .ring-value { font-size: 14px; }
+      .cvm-quick-stats { gap:8px; }
+      .cvm-stat-card { min-width:70px; padding:12px 14px; }
       .cvm-cast-grid { grid-template-columns:repeat(auto-fill,minmax(85px,1fr)); gap:10px; }
       .cvm-bento-grid { grid-template-columns:1fr; }
-      .cv-episode-grid { grid-template-columns:repeat(2, 1fr); }
     }
   `;
   document.head.appendChild(s);
@@ -249,7 +216,7 @@ var CVModal = {
 
   _cleanup: function() {
     if (this.heroInterval) { clearInterval(this.heroInterval); this.heroInterval = null; }
-    ['cv-actor-stack', 'cv-recs-grid', 'cv-main-actor-grid', 'cv-gallery-container', 'cv-server-tabs', 'cv-bars-group', 'cv-tv-selector'].forEach(function(eid) {
+    ['cv-actor-stack', 'cv-recs-grid', 'cv-main-actor-grid', 'cv-gallery-container', 'cv-server-tabs', 'cv-bars-group'].forEach(function(eid) {
       var el = document.getElementById(eid); if (el) el.innerHTML = '';
     });
     document.querySelectorAll('.cvm-quick-stats, .cvm-tagline, .cvm-crew-section, .cvm-videos-section, .cvm-reviews-section, .cvm-seasons-section, .cvm-ext-links').forEach(function(el){ el.remove(); });
@@ -261,7 +228,7 @@ var CVModal = {
     document.getElementById('cv-m-title').textContent = 'Loading...';
     document.getElementById('cv-m-desc').textContent = 'Loading...';
     document.getElementById('cv-m-meta').innerHTML = '<span style="color:#aaa;"><i class="fas fa-spinner fa-spin"></i> Loading...</span>';
-    ['cv-player-section','cv-trailer-wrap','cv-image-gallery','cv-recs-wrap','cv-main-actor-wrap','cv-analytics-wrap','cv-imdb-info','cv-tv-selector'].forEach(function(sid) { var el = document.getElementById(sid); if (el) el.style.display = 'none'; });
+    ['cv-player-section','cv-trailer-wrap','cv-image-gallery','cv-recs-wrap','cv-main-actor-wrap','cv-analytics-wrap','cv-imdb-info','cv-wtw-section'].forEach(function(sid) { var el = document.getElementById(sid); if (el) el.style.display = 'none'; });
     var cast = document.getElementById('cv-cast-scroll'); if (cast) cast.innerHTML = '<div style="color:#888;padding:20px;"><i class="fas fa-spinner fa-spin"></i> Loading cast...</div>';
     var stack = document.getElementById('cv-actor-stack'); if (stack) stack.innerHTML = '';
   },
@@ -290,24 +257,20 @@ var CVModal = {
     if (data.poster_path && posterEl) posterEl.src = 'https://image.tmdb.org/t/p/w500' + data.poster_path;
     if (titleEl) titleEl.textContent = data.title || data.name || 'Untitled';
 
-    // Normalize Buttons & Apply red gradient to all (Feature 2)
+    // Fix Buttons Uniformity
     setTimeout(function normalizeActionButtons() {
       var dlLeft = document.getElementById('btn-download-left');
       var dlRight = document.getElementById('btn-download-right');
       if (!dlLeft || !dlRight) return;
       dlLeft.removeAttribute('style'); dlRight.removeAttribute('style');
-      dlLeft.className = 'cv-btn-play cv-btn-watch'; // Make it red!
-      dlRight.className = 'cv-btn-play cv-btn-watch'; // Make it red!
+      dlLeft.className = 'cv-btn-play cv-btn-download'; dlRight.className = 'cv-btn-play cv-btn-download';
       var parent = dlLeft.parentElement;
       if (parent) {
         parent.classList.add('cv-modal-actions-bar');
         var watch = parent.querySelector('button[onclick*="CVPlayer"]');
         if (watch) { watch.removeAttribute('style'); watch.className = 'cv-btn-play cv-btn-watch'; }
         if (watch) { parent.appendChild(dlLeft); parent.appendChild(watch); parent.appendChild(dlRight); }
-        
-        var type = CVModal.current.type; 
-        var id = CVModal.current.id;
-        var tmdbUrl = 'https://www.themoviedb.org/' + type + '/' + id;
+        var tmdbUrl = 'https://www.themoviedb.org/' + type + '/' + id + '/watch';
         dlLeft.onclick = function () { window.open(tmdbUrl, '_blank'); };
         dlRight.onclick = function () { window.open(tmdbUrl, '_blank'); };
       }
@@ -342,10 +305,10 @@ var CVModal = {
     if (metaR > 0) stats.push({ label: 'Meta', v: metaR, color: '#66cc33' });
 
     var html = '<div class="cvm-quick-stats">';
-    var C = 2 * Math.PI * 28; // Increased radius
+    var C = 2 * Math.PI * 24;
     stats.forEach(function(s) {
       var off = C - (s.v / 10) * C;
-      html += '<div class="cvm-stat-card"><div class="cvm-rating-ring"><svg width="70" height="70" viewBox="0 0 70 70"><circle class="ring-bg" cx="35" cy="35" r="28"/><circle class="ring-fill" cx="35" cy="35" r="28" style="stroke:' + s.color + '; stroke-dasharray:' + C + '; stroke-dashoffset:' + C + '; animation:cvmRingFill 1.5s ease-out forwards; --target-offset:' + off + '; filter: drop-shadow(0 0 6px ' + s.color + ');"/></svg><div class="ring-value" style="color:' + s.color + ';">' + s.v.toFixed(1) + '</div></div><div class="cvm-stat-label">' + s.label + '</div></div>';
+      html += '<div class="cvm-stat-card"><div class="cvm-rating-ring"><svg width="60" height="60" viewBox="0 0 60 60"><circle class="ring-bg" cx="30" cy="30" r="24"/><circle class="ring-fill" cx="30" cy="30" r="24" style="stroke:' + s.color + '; stroke-dasharray:' + C + '; stroke-dashoffset:' + C + '; animation:cvmRingFill 1.4s ease-out forwards; --target-offset:' + off + ';"/></svg><div class="ring-value" style="color:' + s.color + ';">' + s.v.toFixed(1) + '</div></div><div class="cvm-stat-label">' + s.label + '</div></div>';
     });
     if (data.vote_count) html += '<div class="cvm-stat-card"><div class="cvm-stat-num" data-target="' + data.vote_count + '">0</div><div class="cvm-stat-label">Votes</div></div>';
     html += '</div>';
@@ -379,28 +342,19 @@ var CVModal = {
     var html = '';
 
     if (omdb && omdb.Awards && omdb.Awards !== 'N/A') {
-      html += '<div class="cvm-glass-card cvm-awards-section" style="grid-column:1/-1; border-left: 4px solid #ffc107;"><div class="cvm-section-heading"><i class="fas fa-trophy" style="color:#ffc107;"></i> Awards & Achievements</div><div style="color:#ffd700;font-weight:600;font-size:15px;line-height:1.6;">' + CVM.esc(omdb.Awards) + '</div></div>';
+      html += '<div class="cvm-glass-card cvm-awards-section" style="grid-column:1/-1;"><div class="cvm-section-heading"><i class="fas fa-trophy" style="color:#ffc107;"></i> Awards</div><div style="color:#ffc107;font-weight:500;">' + CVM.esc(omdb.Awards) + '</div></div>';
     }
 
-    // Rich Detailed Bento Grid (Feature 5)
-    html += '<div class="cvm-glass-card"><div class="cvm-section-heading"><i class="fas fa-info-circle" style="color:#22d3ee;"></i> Details & Specs</div><div class="cvm-info-grid">';
+    html += '<div class="cvm-glass-card"><div class="cvm-section-heading"><i class="fas fa-info-circle" style="color:#22d3ee;"></i> Details</div><div class="cvm-info-grid">';
     var details = [
       { label: 'Release', value: data.release_date || data.first_air_date, icon: 'fa-calendar' },
-      { label: 'Status', value: data.status, icon: 'fa-info' },
       { label: 'Country', value: (data.production_countries || []).map(function(c){ return c.name; }).join(', '), icon: 'fa-globe' },
       { label: 'Director', value: director, icon: 'fa-video' },
       { label: 'Runtime', value: omdb && omdb.Runtime !== 'N/A' ? omdb.Runtime : (data.runtime ? CVM.fmtRuntime(data.runtime) : null), icon: 'fa-clock' },
-      { label: 'Rated', value: omdb && omdb.Rated !== 'N/A' ? omdb.Rated : 'N/A', icon: 'fa-certificate' },
-      { label: 'Language', value: omdb && omdb.Language !== 'N/A' ? omdb.Language : (data.original_language ? data.original_language.toUpperCase() : null), icon: 'fa-language' },
-      { label: 'Production', value: (data.production_companies || []).slice(0,2).map(function(c){ return c.name; }).join(', '), icon: 'fa-building' }
+      { label: 'Rated', value: omdb && omdb.Rated !== 'N/A' ? omdb.Rated : null, icon: 'fa-certificate' },
+      { label: 'Language', value: omdb && omdb.Language !== 'N/A' ? omdb.Language : (data.original_language ? data.original_language.toUpperCase() : null), icon: 'fa-language' }
     ];
-    var delay = 0.1;
-    details.forEach(function(d) { 
-      if (d.value && d.value !== '—') { 
-        html += '<div class="cvm-info-item" style="animation-delay: ' + delay + 's;"><div class="cvm-info-label"><i class="fas ' + d.icon + '"></i> ' + d.label + '</div><div class="cvm-info-value">' + CVM.esc(d.value) + '</div></div>'; 
-        delay += 0.1;
-      } 
-    });
+    details.forEach(function(d) { if (d.value) { html += '<div class="cvm-info-item"><div class="cvm-info-label"><i class="fas ' + d.icon + '"></i> ' + d.label + '</div><div class="cvm-info-value">' + CVM.esc(d.value) + '</div></div>'; } });
     html += '</div></div>';
 
     var budget = data.budget || 0;
@@ -408,12 +362,29 @@ var CVModal = {
     if (omdb && omdb.BoxOffice && omdb.BoxOffice.indexOf('$') >= 0) { var rt = omdb.BoxOffice.replace(/[^0-9]/g, ''); if (rt) revenue = parseInt(rt); }
     if (budget > 0 || revenue > 0) {
       html += '<div class="cvm-glass-card"><div class="cvm-section-heading"><i class="fas fa-dollar-sign" style="color:#46d369;"></i> Box Office</div><div class="cvm-info-grid">';
-      if (budget > 0) html += '<div class="cvm-info-item" style="border-left-color: #46d369;"><div class="cvm-info-label" style="color:#46d369;">Budget</div><div class="cvm-info-value">' + CVM.fmtMoney(budget) + '</div></div>';
-      if (revenue > 0) html += '<div class="cvm-info-item" style="border-left-color: #46d369;"><div class="cvm-info-label" style="color:#46d369;">Revenue</div><div class="cvm-info-value" style="color:#46d369;">' + CVM.fmtMoney(revenue) + '</div></div>';
+      if (budget > 0) html += '<div class="cvm-info-item"><div class="cvm-info-label">Budget</div><div class="cvm-info-value">' + CVM.fmtMoney(budget) + '</div></div>';
+      if (revenue > 0) html += '<div class="cvm-info-item"><div class="cvm-info-label">Revenue</div><div class="cvm-info-value" style="color:#46d369;">' + CVM.fmtMoney(revenue) + '</div></div>';
       html += '</div></div>';
     }
 
-    // "Where to Watch" has been completely REMOVED as requested (Feature 6).
+    var wp = data['watch/providers'];
+    var region = wp && wp.results ? (wp.results.US || wp.results.GB || null) : null;
+    if (watchmode && watchmode.length > 0) {
+       html += '<div class="cvm-glass-card" style="grid-column:1/-1;"><div class="cvm-section-heading"><i class="fas fa-tv" style="color:#e50914;"></i> Where to Watch</div><div class="cvm-wtw-grid">';
+       var seenP = new Set();
+       watchmode.forEach(function(p) {
+         if(!seenP.has(p.name)) { seenP.add(p.name); html += '<a class="cvm-wtw-item" href="' + (p.web_url || '#') + '" target="_blank" rel="noopener"><img src="' + (p.logo_100px || '') + '" alt=""><div><div class="cvm-wtw-name">' + CVM.esc(p.name) + '</div><div class="cvm-wtw-type">Stream</div></div></a>'; }
+       });
+       html += '</div></div>';
+    } else if (region && (region.flatrate || region.rent || region.buy)) {
+       var items = []; if (region.flatrate) items = items.concat(region.flatrate);
+       html += '<div class="cvm-glass-card" style="grid-column:1/-1;"><div class="cvm-section-heading"><i class="fas fa-tv" style="color:#e50914;"></i> Where to Watch</div><div class="cvm-wtw-grid">';
+       var seen = new Set();
+       items.forEach(function(it) {
+         if(!seen.has(it.provider_id)) { seen.add(it.provider_id); html += '<a class="cvm-wtw-item" href="' + (region.link || '#') + '" target="_blank"><img src="https://image.tmdb.org/t/p/w92' + it.logo_path + '" alt=""><div><div class="cvm-wtw-name">' + CVM.esc(it.provider_name) + '</div><div class="cvm-wtw-type">Stream</div></div></a>'; }
+       });
+       html += '</div></div>';
+    }
 
     container.innerHTML = '<div class="cvm-bento-grid">' + html + '</div>';
   },
@@ -487,6 +458,20 @@ var CVModal = {
     html += '</div></div>';
     var recsWrap = document.getElementById('cv-recs-wrap');
     if (recsWrap && recsWrap.parentNode) { var temp = document.createElement('div'); temp.innerHTML = html; recsWrap.parentNode.insertBefore(temp.firstElementChild, recsWrap); }
+  },
+
+  _renderSeasons: function(data, type, myId) {
+    if (type !== 'tv') return;
+    var seasons = data.seasons || []; if (seasons.length === 0) return;
+    var existing = document.querySelector('.cvm-seasons-section'); if (existing) existing.remove();
+    var castGrid = document.getElementById('cv-cast-scroll'); var insertAfter = (castGrid && castGrid.parentNode) || null; if (!insertAfter) return;
+    var html = '<div class="cvm-seasons-section"><div class="cvm-section-heading"><i class="fas fa-list-ol"></i> Seasons</div><div class="cvm-seasons-grid">';
+    seasons.forEach(function(s, i) {
+      if (s.season_number === 0) return; var poster = s.poster_path ? 'https://image.tmdb.org/t/p/w185' + s.poster_path : null;
+      html += '<div class="cvm-season-card">' + (poster ? '<img class="cvm-season-poster" src="' + poster + '" loading="lazy" alt="">' : '') + '<div class="cvm-season-info"><div class="cvm-season-name">' + CVM.esc(s.name) + '</div><div class="cvm-season-meta">' + (s.episode_count || 0) + ' eps</div></div></div>';
+    });
+    html += '</div></div>';
+    var temp = document.createElement('div'); temp.innerHTML = html; insertAfter.insertAdjacentElement('afterend', temp.firstElementChild);
   },
 
   _renderAnalytics: function(data, omdb, myId) {
@@ -586,7 +571,7 @@ var CVActor = {
 };
 
 /* ═══════════════════════════════════════════════
-   5. PLAYER — v4 MERGED (Grid Episodes + Server Sorting)
+   5. PLAYER — v3 MERGED (TV Episodes + Auto-Health Check)
 ═══════════════════════════════════════════════ */
 var CVPlayer = {
   activeServer: 0,
@@ -606,7 +591,13 @@ var CVPlayer = {
     this.currentEpisode = 1;
     this._serverTestingDone = false;
     if (!window.CV_SERVERS) return;
-    
+
+    var defaultId = (window.CV_CONFIG && CV_CONFIG.defaultServer) || 'vidsrc-net';
+    var defIdx = -1;
+    for (var i = 0; i < window.CV_SERVERS.length; i++) {
+      if (window.CV_SERVERS[i].id === defaultId) { defIdx = i; break; }
+    }
+    this.activeServer = defIdx >= 0 ? defIdx : 0;
     this._renderServerTabs();
   },
 
@@ -617,27 +608,13 @@ var CVPlayer = {
     var self = this;
     var health = window.CVServerHealth;
 
-    // Feature 4: Sort servers so working ones come first
-    var sortedServers = [...window.CV_SERVERS].sort(function(a, b) {
-      var aWorking = health && health.workingServers && health.workingServers.some(function(w){ return w.id === a.id; }) ? 1 : 0;
-      var bWorking = health && health.workingServers && health.workingServers.some(function(w){ return w.id === b.id; }) ? 1 : 0;
-      return bWorking - aWorking; 
-    });
-    
-    // Update global array so load() uses the new order
-    window.CV_SERVERS = sortedServers; 
-    
-    var defaultId = (window.CV_CONFIG && CV_CONFIG.defaultServer) || '';
-    var defIdx = 0;
-    
     window.CV_SERVERS.forEach(function(s, i) {
-      if (s.id === defaultId) defIdx = i;
       var t = document.createElement('button');
       t.className = 'cv-server-tab' + (i === self.activeServer ? ' cv-active' : '');
-      
-      var isWorking = health && health.workingServers && health.workingServers.some(function(w){ return w.id === s.id; });
-      t.innerHTML = CVM.esc(s.name) + (isWorking ? ' <span style="color:#22c55e;font-size:12px;text-shadow:0 0 5px #22c55e;">●</span>' : '');
-      
+      t.textContent = s.name;
+      if (health && health.workingServers && health.workingServers.find(function(w){ return w.id === s.id; })) {
+        t.innerHTML = CVM.esc(s.name) + ' <span style="color:#22c55e;font-size:10px;">●</span>';
+      }
       t.dataset.id = s.id;
       t.onclick = function() {
         if (self.deadServers[s.id]) { if (window.CVUtils) CVUtils.toast('Server unavailable'); return; }
@@ -647,22 +624,18 @@ var CVPlayer = {
       };
       tabs.appendChild(t);
     });
-    
-    if (defIdx > 0 && !this.deadServers[window.CV_SERVERS[0].id]) {
-        this.activeServer = defIdx;
-    } else {
-        this.activeServer = 0;
-    }
   },
 
   open: async function() {
     var s = document.getElementById('cv-player-section');
     if (s) { s.style.display = 'block'; s.classList.add('cv-active'); }
 
+    // ১. TV হলে Season/Episode Selector দেখাও
     if (CVModal.current && CVModal.current.type === 'tv') {
-      this._renderAllSeasons(CVModal.current.id, CVModal.current.data);
+      this._renderTVSelector(CVModal.current.id, CVModal.current.data);
     }
 
+    // ২. Auto-Health Check (only if CVServerHealth module exists)
     if (!this._serverTestingDone) {
       this._serverTestingDone = true;
       var health = window.CVServerHealth;
@@ -671,6 +644,13 @@ var CVPlayer = {
         if (tabs) tabs.innerHTML = '<div style="color:#aaa;font-size:12px;padding:10px;"><i class="fas fa-spinner fa-spin"></i> Checking best servers...</div>';
         try {
           await health.testAll(CVModal.current.type, CVModal.current.id, this.currentSeason, this.currentEpisode);
+          if (typeof health.getSortedServers === 'function') {
+            var sorted = health.getSortedServers();
+            if (sorted && sorted.length) {
+              window.CV_SERVERS = sorted;
+              this.activeServer = 0;
+            }
+          }
         } catch(e) { console.warn('[CVPlayer] Health check failed:', e); }
         this._renderServerTabs();
       } else {
@@ -681,53 +661,60 @@ var CVPlayer = {
     this.load(true);
   },
 
-  // Feature 3: Load all seasons instead of dropdown
-  _renderAllSeasons: async function(tvId, data) {
+  _renderTVSelector: function(id, data) {
     var wrap = document.getElementById('cv-tv-selector');
     if (!wrap) {
       var player = document.getElementById('cv-player-section');
       if (!player) return;
       wrap = document.createElement('div');
       wrap.id = 'cv-tv-selector';
-      wrap.style.cssText = 'margin-bottom:20px; display:block;';
+      wrap.style.cssText = 'margin-bottom:15px;';
       var tabs = document.getElementById('cv-server-tabs');
       if (tabs && tabs.parentNode) tabs.parentNode.insertBefore(wrap, tabs);
       else player.insertBefore(wrap, player.firstChild);
     }
 
     var seasons = data.seasons || [];
-    var validSeasons = seasons.filter(function(s) { return s.season_number > 0; });
+    var validSeasons = seasons.filter(function(s) {
+      if (!window.CV_CONFIG || !CV_CONFIG.tv || !CV_CONFIG.tv.showSpecialSeasons) { if (s.season_number === 0) return false; }
+      return s.season_number > 0;
+    });
     if (validSeasons.length === 0) { wrap.style.display = 'none'; return; }
     wrap.style.display = 'block';
 
     var self = this;
-    var html = '<div class="cv-tv-controls" style="background:transparent; border:none; padding:0;">';
-    
-    // Create UI block for each season
+    var html = '<div class="cv-tv-controls">';
+    html += '<div class="cv-season-row">';
+    html += '<label class="cv-select-label"><i class="fas fa-list"></i> Season</label>';
+    html += '<select id="cv-season-select" class="cv-season-select">';
     validSeasons.forEach(function(s) {
-      html += `<div class="cvm-season-block" id="season-block-${s.season_number}">
-                 <div class="cvm-season-header">
-                   <span><i class="fas fa-list-ol" style="color:#e50914; margin-right:8px;"></i> ${CVM.esc(s.name)}</span>
-                   <span style="font-size:12px; color:#22d3ee; background:rgba(34,211,238,0.1); padding:3px 8px; border-radius:10px;">${s.episode_count || 0} Episodes</span>
-                 </div>
-                 <div class="cv-episode-grid" id="ep-grid-${s.season_number}">
-                   <div style="color:#888;padding:10px;text-align:center;"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
-                 </div>
-               </div>`;
+      var sel = s.season_number === self.currentSeason ? ' selected' : '';
+      html += '<option value="' + s.season_number + '"' + sel + '>' + CVM.esc(s.name) + ' · ' + (s.episode_count || 0) + ' episodes</option>';
     });
-    
-    html += '</div>';
+    html += '</select></div>';
+    html += '<div class="cv-episode-row">';
+    html += '<label class="cv-select-label"><i class="fas fa-play-circle"></i> Episodes</label>';
+    html += '<div id="cv-episode-grid" class="cv-episode-grid"><div style="color:#888;padding:15px;text-align:center;"><i class="fas fa-spinner fa-spin"></i> Loading...</div></div>';
+    html += '</div></div>';
     wrap.innerHTML = html;
 
-    // Load episodes for all seasons concurrently
-    validSeasons.forEach(function(s) {
-      self._loadEpisodesForBlock(tvId, s.season_number);
-    });
+    var sel = document.getElementById('cv-season-select');
+    if (sel) {
+      sel.onchange = function() {
+        var newSeason = parseInt(this.value);
+        self.currentSeason = newSeason;
+        self.currentEpisode = 1;
+        self._loadEpisodes(id, newSeason);
+        self.load(false);
+      };
+    }
+    this._loadEpisodes(id, this.currentSeason);
   },
 
-  _loadEpisodesForBlock: async function(tvId, seasonNum) {
-    var grid = document.getElementById('ep-grid-' + seasonNum);
+  _loadEpisodes: async function(tvId, seasonNum) {
+    var grid = document.getElementById('cv-episode-grid');
     if (!grid) return;
+    grid.innerHTML = '<div style="color:#888;padding:15px;text-align:center;"><i class="fas fa-spinner fa-spin"></i> Loading episodes...</div>';
 
     var data = await CVAPI.tmdb('/tv/' + tvId + '/season/' + seasonNum, {}).catch(function(){ return null; });
 
@@ -740,41 +727,39 @@ var CVPlayer = {
       if (epCount > 0) {
         var html = '';
         for (var i = 1; i <= epCount; i++) {
-          html += '<button class="cv-episode-btn" onclick="CVPlayer.selectEpisode(' + seasonNum + ', ' + i + ', this)"><span class="cv-ep-num">E' + i + '</span></button>';
+          var isActive = (seasonNum === this.currentSeason && i === this.currentEpisode);
+          html += '<button class="cv-episode-btn' + (isActive ? ' cv-active' : '') + '" onclick="CVPlayer.selectEpisode(' + seasonNum + ', ' + i + ')">' +
+            '<span class="cv-ep-num">E' + i + '</span></button>';
         }
         grid.innerHTML = html;
       } else {
-        grid.innerHTML = '<div style="color:#888;padding:10px;">No episodes found.</div>';
+        grid.innerHTML = '<div style="color:#888;padding:15px;text-align:center;">No episodes found.</div>';
       }
       return;
     }
 
     var html = '';
+    var self = this;
     data.episodes.forEach(function(ep) {
+      var isActive = (seasonNum === self.currentSeason && ep.episode_number === self.currentEpisode);
       var stillUrl = ep.still_path ? 'https://image.tmdb.org/t/p/w300' + ep.still_path : null;
-      html += '<button class="cv-episode-btn" onclick="CVPlayer.selectEpisode(' + seasonNum + ', ' + ep.episode_number + ', this)">' +
-        (stillUrl ? '<div class="cv-ep-thumb" style="width:100%;height:60px;border-radius:6px;background-size:cover;background-position:center;margin-bottom:6px;background-image:url(\'' + stillUrl + '\')"></div>' : '') +
+      html += '<button class="cv-episode-btn' + (isActive ? ' cv-active' : '') + '" onclick="CVPlayer.selectEpisode(' + seasonNum + ', ' + ep.episode_number + ')">' +
+        (stillUrl ? '<div class="cv-ep-thumb" style="background-image:url(\'' + stillUrl + '\')"></div>' : '') +
         '<span class="cv-ep-num">E' + ep.episode_number + '</span>' +
         '<span class="cv-ep-name">' + CVM.esc(ep.name || ('Episode ' + ep.episode_number)) + '</span>' +
+        (ep.overview ? '<span class="cv-ep-desc">' + CVM.esc(ep.overview.substring(0, 60)) + '...</span>' : '') +
         '</button>';
     });
     grid.innerHTML = html;
   },
 
-  selectEpisode: function(season, episode, btnElement) {
+  selectEpisode: function(season, episode) {
     this.currentSeason = season;
     this.currentEpisode = episode;
-    
-    // Remove active state from all buttons
     document.querySelectorAll('.cv-episode-btn').forEach(function(b) { b.classList.remove('cv-active'); });
-    // Add to clicked
-    if (btnElement) btnElement.classList.add('cv-active');
-    
+    var ev = window.event;
+    if (ev && ev.currentTarget) ev.currentTarget.classList.add('cv-active');
     this.load(false);
-    this._serverTestingDone = false; // Re-check servers for this new episode
-    
-    var playerWrap = document.getElementById('cv-player-section');
-    if (playerWrap) playerWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
   },
 
   load: function(allowFailover) {
@@ -834,6 +819,32 @@ var CVPlayer = {
   }
 };
 
+/* ★ TV Selector CSS */
+(function() {
+  if (document.getElementById('cv-tv-selector-styles')) return;
+  var s = document.createElement('style');
+  s.id = 'cv-tv-selector-styles';
+  s.textContent = `
+    .cv-tv-controls { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:16px; }
+    .cv-season-row { display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
+    .cv-select-label { font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#22d3ee; display:flex; align-items:center; gap:6px; }
+    .cv-season-select { flex:1; min-width:200px; padding:10px 14px; border-radius:10px; background:#0d0d14; border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:13px; font-weight:600; cursor:pointer; outline:none; }
+    .cv-season-select:hover, .cv-season-select:focus { border-color:#22d3ee; }
+    .cv-episode-row { display:flex; flex-direction:column; gap:10px; }
+    .cv-episode-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:8px; max-height:280px; overflow-y:auto; padding:4px; }
+    .cv-episode-btn { display:flex; flex-direction:column; gap:4px; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:10px; color:#e5e5e5; cursor:pointer; text-align:left; transition:all 0.2s; font-family:inherit; }
+    .cv-episode-btn:hover { background:rgba(255,255,255,0.08); border-color:rgba(34,211,238,0.4); transform:translateY(-1px); }
+    .cv-episode-btn.cv-active { background:rgba(229,9,20,0.15); border-color:#e50914; box-shadow:0 4px 15px rgba(229,9,20,0.3); }
+    .cv-ep-thumb { width:100%; height:60px; border-radius:6px; background-size:cover; background-position:center; margin-bottom:6px; }
+    .cv-ep-num { font-size:11px; font-weight:800; color:#22d3ee; text-transform:uppercase; }
+    .cv-episode-btn.cv-active .cv-ep-num { color:#fff; }
+    .cv-ep-name { font-size:12px; font-weight:600; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .cv-ep-desc { font-size:10px; color:#888; overflow:hidden; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; }
+    @media (max-width: 600px) { .cv-episode-grid { grid-template-columns:repeat(2, 1fr); max-height:220px; } .cv-ep-thumb { height:50px; } }
+  `;
+  document.head.appendChild(s);
+})();
+
 /* ═══════════════════════════════════════════════
    6. HISTORY
 ═══════════════════════════════════════════════ */
@@ -842,6 +853,6 @@ window.addEventListener('popstate', function(e) {
   else { CVModal.close(true); var fp = document.getElementById('cv-full-page'); if (fp && fp.classList.contains('active') && window.CVCategory) CVCategory.closeFullPage(true); }
 });
 
-console.info('[CineVault] ✓ Part 1 v6 Upgraded loaded — All Features Applied');
+console.info('[CineVault] ✓ Part 1 v5 Final + TV Player Merged loaded');
 //]]>
 </script>
