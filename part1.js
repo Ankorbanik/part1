@@ -1,6 +1,5 @@
-
 <script>
-
+//<![CDATA[
 /* ================================================================
    PART 1 — ULTIMATE CINEMATIC MODAL (v8 Ultimate Edition)
    ✓ Premium Red Buttons (Restored)
@@ -927,5 +926,5 @@ window.addEventListener('popstate', function(e) {
 });
 
 console.info('[CineVault] ✓ Part 1 v8 Ultimate loaded — Red Buttons Restored, Rich APIs Merged, Episode Auto-Detect Active');
-
+//]]>
 </script>
