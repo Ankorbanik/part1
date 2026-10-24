@@ -1,12 +1,16 @@
 <script>
 //<![CDATA[
 /* ================================================================
-   PART 1 — ULTIMATE CINEMATIC MODAL (v8 Ultimate Edition)
-   ✓ Premium Red Buttons (Restored)
-   ✓ Multi-API Rich Data Integration (TMDB, AniList, TVmaze, OMDb, etc.)
-   ✓ Advanced Animations & Glassmorphism
-   ✓ All Seasons/Episodes Grid with Instant Server Auto-Detection
-   ✓ Smart Server Sorting (Working servers first)
+   PART 1 — ULTIMATE CINEMATIC MODAL (v7 Merged Final)
+   ✓ Glassmorphism + Bento Grid
+   ✓ Watchmode API Kept (But UI Removed)
+   ✓ Fallback Recommendations
+   ✓ Filtered Actor Stack
+   ✓ Premium Uniform Action Buttons (Old logic + New Red Color)
+   ✓ All Seasons/Episodes Grid (No Dropdown)
+   ✓ Smart Server Sorting (Working Servers First)
+   ✓ Auto-Health Server Check
+   ✓ Enhanced Details & Poster Size
 ================================================================ */
 
 /* ═══════════════════════════════════════════════
@@ -30,44 +34,39 @@
       object-fit: cover;
       border-radius: 12px;
     }
-    .cv-m-poster:hover { transform: scale(1.05) translateY(-8px); box-shadow: 0 25px 70px rgba(229,9,20,.3); }
+    .cv-m-poster:hover { transform: scale(1.03) translateY(-5px); }
     .cv-m-title { text-shadow: 0 4px 20px rgba(0,0,0,.85); }
 
-    /* ── Action Buttons (Premium Red Restored) ── */
-    .cv-modal-actions-bar { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 12px !important; margin-top: 20px !important; width: 100%; }
-    .cv-btn-play { 
-      padding: 14px 20px !important; font-size: 14px !important; border-radius: 30px !important; 
-      font-weight: 700 !important; display: flex !important; align-items: center; justify-content: center; 
-      gap: 8px; border: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; 
-      letter-spacing: 0.5px; text-transform: uppercase;
-    }
+    /* ── Action Buttons (Uniform Premium Red) ── */
+    .cv-modal-actions-bar { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; margin-top: 15px !important; width: 100%; }
+    .cv-btn-play { padding: 12px 18px !important; font-size: 13px !important; border-radius: 25px !important; font-weight: 700 !important; display: flex !important; align-items: center; justify-content: center; gap: 8px; border: none; transition: all 0.3s; cursor: pointer; }
     
-    /* All buttons have the premium red look */
+    /* Both Watch and Download have the same premium red look */
     .cv-btn-watch, .cv-btn-download { 
       background: linear-gradient(135deg, #e50914 0%, #b20710 100%) !important; 
       color: #fff !important; 
-      box-shadow: 0 6px 20px rgba(229,9,20,0.4), inset 0 1px 1px rgba(255,255,255,0.2); 
+      box-shadow: 0 4px 15px rgba(229,9,20,0.4); 
       border: 1px solid rgba(255,255,255,0.1) !important;
     }
     .cv-btn-watch:hover, .cv-btn-download:hover { 
-      transform: scale(1.05) translateY(-3px); 
-      box-shadow: 0 12px 30px rgba(229,9,20,0.7), inset 0 1px 1px rgba(255,255,255,0.3); 
+      transform: scale(1.05); 
+      box-shadow: 0 8px 25px rgba(229,9,20,0.6); 
     }
     @media(max-width: 600px) { .cv-modal-actions-bar { grid-template-columns: 1fr !important; } }
 
     /* ── Badges ── */
-    .cvm-badge { display:inline-flex; align-items:center; gap:5px; padding:6px 14px; border-radius:20px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); font-size:12px; font-weight:700; color:#e5e5e5; backdrop-filter:blur(10px); transition:all .3s; }
-    .cvm-badge:hover { background:rgba(255,255,255,.15); transform:translateY(-3px) scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-    .cvm-badge-gold { color:#ffd700; border-color:rgba(255,215,0,.35); background:rgba(255,215,0,.08); box-shadow: 0 0 10px rgba(255,215,0,0.1); }
+    .cvm-badge { display:inline-flex; align-items:center; gap:5px; padding:5px 11px; border-radius:20px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); font-size:11px; font-weight:700; color:#e5e5e5; backdrop-filter:blur(10px); transition:all .25s; }
+    .cvm-badge:hover { background:rgba(255,255,255,.14); transform:translateY(-2px); }
+    .cvm-badge-gold { color:#ffd700; border-color:rgba(255,215,0,.35); background:rgba(255,215,0,.08); }
     .cvm-badge-imdb { color:#f5c518; border-color:rgba(245,197,24,.35); background:rgba(245,197,24,.08); }
 
-    /* ── Rating Rings (Ultra Premium) ── */
-    .cvm-quick-stats { display:flex; flex-wrap:wrap; gap:16px; margin:25px 0; justify-content: flex-start; }
+    /* ── Rating Rings (Premium Animated) ── */
+    .cvm-quick-stats { display:flex; flex-wrap:wrap; gap:16px; margin:25px 0; justify-content: center; }
     .cvm-stat-card { 
-      position:relative; display:flex; flex-direction:column; align-items:center; gap:12px; 
-      padding:20px 25px; min-width:120px; 
+      position:relative; display:flex; flex-direction:column; align-items:center; gap:10px; 
+      padding:20px 25px; min-width:110px; 
       background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02)); 
-      border:1px solid rgba(255,255,255,.1); border-radius:22px; backdrop-filter:blur(25px); 
+      border:1px solid rgba(255,255,255,.1); border-radius:20px; backdrop-filter:blur(25px); 
       overflow:hidden; transition:all .4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
       box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
@@ -76,127 +75,111 @@
       border-color:rgba(229,9,20,.6); 
       box-shadow:0 15px 40px rgba(229,9,20,.3), inset 0 0 20px rgba(229,9,20,0.1); 
     }
-    .cvm-rating-ring { position:relative; width:75px; height:75px; }
+    .cvm-rating-ring { position:relative; width:70px; height:70px; }
     .cvm-rating-ring svg { transform:rotate(-90deg); }
     .cvm-rating-ring .ring-bg { fill:none; stroke:rgba(255,255,255,.08); stroke-width:5; }
     .cvm-rating-ring .ring-fill { fill:none; stroke-width:5; stroke-linecap:round; }
-    .cvm-rating-ring .ring-value { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:20px; text-shadow: 0 0 15px rgba(255,255,255,0.6); }
-    .cvm-stat-label { font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:1.2px; color:#aaa; }
-    .cvm-stat-num { font-size:32px; font-weight:900; color:#fff; text-shadow: 0 0 20px rgba(255,255,255,0.4); }
+    .cvm-rating-ring .ring-value { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:18px; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+    .cvm-stat-label { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#aaa; }
+    .cvm-stat-num { font-size:28px; font-weight:900; color:#fff; text-shadow: 0 0 15px rgba(255,255,255,0.3); }
 
     /* ── Tagline & Keywords ── */
-    .cvm-tagline { position:relative; padding:14px 0 14px 22px; border-left:4px solid #e50914; font-style:italic; font-size:16px; color:#d0d0d8; margin-bottom:20px; line-height:1.6; animation:cvmFadeUp .6s ease; font-weight: 500; }
-    .cvm-tagline i { color:#e50914; margin-right:8px; opacity:.8; }
-    .cvm-keywords { margin-top:25px; }
-    .cvm-keywords-label { font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#6b6b80; margin-bottom:12px; }
-    .cvm-keywords-list { display:flex; flex-wrap:wrap; gap:10px; }
-    .cvm-keyword { padding:6px 15px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:25px; font-size:12px; color:#b3b3c4; font-weight:600; transition:all .3s; animation:cvmFadeUp .4s ease both; }
-    .cvm-keyword:hover { background:rgba(229,9,20,.15); border-color:rgba(229,9,20,.6); color:#fff; transform:translateY(-3px) scale(1.05); box-shadow: 0 5px 15px rgba(229,9,20,0.2); }
+    .cvm-tagline { position:relative; padding:12px 0 12px 20px; border-left:3px solid #e50914; font-style:italic; font-size:15px; color:#d0d0d8; margin-bottom:16px; line-height:1.5; animation:cvmFadeUp .6s ease; }
+    .cvm-tagline i { color:#e50914; margin-right:6px; opacity:.5; }
+    .cvm-keywords { margin-top:22px; }
+    .cvm-keywords-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#6b6b80; margin-bottom:10px; }
+    .cvm-keywords-list { display:flex; flex-wrap:wrap; gap:8px; }
+    .cvm-keyword { padding:5px 13px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:20px; font-size:12px; color:#b3b3c4; font-weight:500; transition:all .25s; animation:cvmFadeUp .4s ease both; }
+    .cvm-keyword:hover { background:rgba(229,9,20,.15); border-color:rgba(229,9,20,.5); color:#fff; transform:translateY(-2px); }
 
-    /* ── Bento Grid (Rich Data Details) ── */
-    .cvm-bento-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:20px; margin-top:25px; }
+    /* ── Bento Grid (Details) ── */
+    .cvm-bento-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px; margin-top:20px; }
     .cvm-glass-card { 
       background:linear-gradient(145deg,rgba(30,33,40,0.85),rgba(15,17,22,0.95)); 
       backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,0.08); 
-      border-radius:20px; padding:25px; box-shadow:0 15px 35px rgba(0,0,0,0.4); 
-      transition:all .4s ease; animation: cvmFadeUp 0.6s ease both; position: relative; overflow: hidden;
+      border-radius:20px; padding:24px; box-shadow:0 15px 35px rgba(0,0,0,0.4); 
+      transition:all .4s ease; animation: cvmFadeUp 0.6s ease both;
     }
-    .cvm-glass-card::before {
-      content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-      transform: skewX(-20deg); transition: 0.5s;
-    }
-    .cvm-glass-card:hover::before { left: 200%; }
-    .cvm-glass-card:hover { border-color:rgba(229,9,20,0.4); transform:translateY(-5px); box-shadow:0 25px 50px rgba(229,9,20,0.15); }
-    .cvm-section-heading { display:flex; align-items:center; gap:12px; font-size:15px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#fff; margin-bottom:22px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:15px; }
-    .cvm-info-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:15px; }
+    .cvm-glass-card:hover { border-color:rgba(229,9,20,0.4); transform:translateY(-4px); box-shadow:0 20px 45px rgba(229,9,20,0.15); }
+    .cvm-section-heading { display:flex; align-items:center; gap:10px; font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:1.2px; color:#fff; margin-bottom:20px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:12px; }
+    .cvm-info-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:16px; }
     .cvm-info-item { padding:16px; background:rgba(0,0,0,.35); border-left:4px solid rgba(34,211,238,.6); border-radius:10px; transition:all .3s; animation: cvmFadeUp 0.5s ease both; }
-    .cvm-info-item:hover { background:rgba(255,255,255,.06); transform:translateX(5px); border-left-color: #22d3ee; box-shadow: 0 5px 15px rgba(34,211,238,0.1); }
-    .cvm-info-label { display:flex; align-items:center; gap:8px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#22d3ee; margin-bottom:8px; }
-    .cvm-info-value { font-size:14px; font-weight:600; color:#fff; line-height:1.5; word-break: break-word; }
+    .cvm-info-item:hover { background:rgba(255,255,255,.05); transform:translateX(5px); }
+    .cvm-info-label { display:flex; align-items:center; gap:8px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.8px; color:#22d3ee; margin-bottom:8px; }
+    .cvm-info-value { font-size:14px; font-weight:600; color:#fff; line-height:1.5; }
 
     /* ── Cast & Crew ── */
-    .cvm-cast-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:16px; padding:5px 0; }
-    .cvm-cast-card { cursor:pointer; transition:transform .4s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation:cvmFadeUp .5s ease both; text-align:center; }
-    .cvm-cast-card:hover { transform:translateY(-8px) scale(1.05); }
-    .cvm-cast-img-wrap { position:relative; width:100%; aspect-ratio:1; border-radius:50%; overflow:hidden; background:#1a1a24; border:3px solid rgba(255,255,255,.1); transition:all .3s; margin-bottom:12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-    .cvm-cast-card:hover .cvm-cast-img-wrap { border-color:#e50914; box-shadow:0 15px 35px rgba(229,9,20,.4); }
-    .cvm-cast-img-wrap img { width:100%; height:100%; object-fit:cover; transition: transform .5s; }
-    .cvm-cast-card:hover .cvm-cast-img-wrap img { transform: scale(1.1); }
-    .cvm-cast-name { font-size:13px; font-weight:700; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-    .cvm-cast-role { font-size:11px; color:#888; margin-top:3px; }
-    
-    .cvm-crew-section { margin:25px 0; padding:22px; background:linear-gradient(135deg,rgba(255,255,255,.03),rgba(255,255,255,.01)); border:1px solid rgba(255,255,255,.08); border-radius:18px; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); }
-    .cvm-crew-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:15px; }
-    .cvm-crew-item { padding:15px; background:rgba(0,0,0,.3); border-radius:12px; border-left: 3px solid #6b6b80; transition: all 0.3s; }
-    .cvm-crew-item:hover { border-left-color: #fff; background:rgba(255,255,255,0.05); transform: translateY(-2px); }
-    .cvm-crew-role { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#6b6b80; margin-bottom:6px; }
+    .cvm-cast-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:14px; padding:4px 0; }
+    .cvm-cast-card { cursor:pointer; transition:transform .35s; animation:cvmFadeUp .5s ease both; text-align:center; }
+    .cvm-cast-card:hover { transform:translateY(-6px) scale(1.03); }
+    .cvm-cast-img-wrap { position:relative; width:100%; aspect-ratio:1; border-radius:50%; overflow:hidden; background:#1a1a24; border:2px solid rgba(255,255,255,.1); transition:border-color .3s; margin-bottom:10px; }
+    .cvm-cast-card:hover .cvm-cast-img-wrap { border-color:#e50914; box-shadow:0 10px 30px rgba(229,9,20,.3); }
+    .cvm-cast-img-wrap img { width:100%; height:100%; object-fit:cover; }
+    .cvm-cast-name { font-size:12px; font-weight:700; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .cvm-cast-role { font-size:10px; color:#888; margin-top:2px; }
+    .cvm-crew-section { margin:24px 0; padding:20px; background:linear-gradient(135deg,rgba(255,255,255,.03),rgba(255,255,255,.01)); border:1px solid rgba(255,255,255,.06); border-radius:16px; }
+    .cvm-crew-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
+    .cvm-crew-item { padding:12px; background:rgba(0,0,0,.25); border-radius:8px; }
+    .cvm-crew-role { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#6b6b80; margin-bottom:5px; }
     .cvm-crew-names { font-size:13px; font-weight:600; color:#e5e5e5; }
 
-    /* ── Videos, Gallery, Reviews ── */
-    .cvm-videos-section, .cvm-reviews-section, .cvm-seasons-section { margin:25px 0; padding:22px; background:linear-gradient(135deg,rgba(255,255,255,.03),rgba(255,255,255,.01)); border:1px solid rgba(255,255,255,.08); border-radius:18px; }
-    .cvm-videos-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }
-    .cvm-video-card { cursor:pointer; transition:transform .3s; border-radius: 12px; overflow: hidden; background: rgba(0,0,0,0.3); padding-bottom: 10px; }
-    .cvm-video-card:hover { transform:translateY(-6px); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-    .cvm-video-thumb { position:relative; width:100%; aspect-ratio:16/9; background:#1a1a24; margin-bottom:10px; }
+    /* ── Videos, Gallery, Reviews, Seasons ── */
+    .cvm-videos-section, .cvm-reviews-section, .cvm-seasons-section { margin:24px 0; padding:20px; background:linear-gradient(135deg,rgba(255,255,255,.03),rgba(255,255,255,.01)); border:1px solid rgba(255,255,255,.06); border-radius:16px; }
+    .cvm-videos-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
+    .cvm-video-card { cursor:pointer; transition:transform .3s; }
+    .cvm-video-card:hover { transform:translateY(-4px); }
+    .cvm-video-thumb { position:relative; width:100%; aspect-ratio:16/9; border-radius:10px; overflow:hidden; background:#1a1a24; margin-bottom:8px; }
     .cvm-video-thumb img { width:100%; height:100%; object-fit:cover; }
-    .cvm-video-name { font-size:13px; font-weight:600; color:#fff; overflow:hidden; text-overflow:ellipsis; padding: 0 10px; }
+    .cvm-video-name { font-size:12px; font-weight:600; color:#fff; overflow:hidden; text-overflow:ellipsis; }
     
-    .cvm-reviews-list { display:flex; flex-direction:column; gap:16px; }
-    .cvm-review-card { padding:18px; background:rgba(0,0,0,.35); border-radius:14px; border-left: 3px solid #e50914; }
-    .cvm-review-header { display:flex; align-items:center; gap:14px; margin-bottom:12px; }
-    .cvm-review-avatar { width:45px; height:45px; border-radius:50%; object-fit:cover; background: #222; border: 2px solid #444; }
-    .cvm-review-author { font-size:14px; font-weight:700; color:#fff; }
-    .cvm-review-rating { font-size:12px; color:#ffd700; margin-top:3px; }
-    .cvm-review-content { font-size:14px; line-height:1.7; color:#b3b3c4; }
+    .cvm-reviews-list { display:flex; flex-direction:column; gap:14px; }
+    .cvm-review-card { padding:16px; background:rgba(0,0,0,.3); border-radius:12px; }
+    .cvm-review-header { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+    .cvm-review-avatar { width:40px; height:40px; border-radius:50%; object-fit:cover; }
+    .cvm-review-author { font-size:13px; font-weight:700; color:#fff; }
+    .cvm-review-rating { font-size:11px; color:#ffd700; margin-top:2px; }
+    .cvm-review-content { font-size:13px; line-height:1.6; color:#b3b3c4; }
 
-    .cvm-recs-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:16px; }
-    .cvm-seasons-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:16px; }
-    .cvm-season-card { background:rgba(0,0,0,.3); border-radius:12px; overflow:hidden; transition:transform .3s; cursor: pointer; }
-    .cvm-season-card:hover { transform:translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-    .cvm-season-poster { width:100%; aspect-ratio:2/3; object-fit:cover; transition: transform 0.4s; }
-    .cvm-season-card:hover .cvm-season-poster { transform: scale(1.05); }
-    .cvm-season-info { padding:12px; }
-    .cvm-season-name { font-size:13px; font-weight:700; color:#fff; }
-    .cvm-season-meta { font-size:11px; color:#6b6b80; margin-top:4px; }
-
-    /* ── Multi-API Data Sources Tag ── */
-    .cvm-api-sources { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
-    .cvm-api-tag { font-size: 10px; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 12px; background: rgba(34,211,238,0.1); color: #22d3ee; border: 1px solid rgba(34,211,238,0.3); letter-spacing: 0.5px; transition: all 0.3s; }
-    .cvm-api-tag:hover { background: rgba(34,211,238,0.2); transform: translateY(-2px); }
+    .cvm-recs-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:14px; }
+    .cvm-seasons-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:14px; }
+    .cvm-season-card { background:rgba(0,0,0,.3); border-radius:10px; overflow:hidden; transition:transform .3s; }
+    .cvm-season-card:hover { transform:translateY(-3px); }
+    .cvm-season-poster { width:100%; aspect-ratio:2/3; object-fit:cover; }
+    .cvm-season-info { padding:10px; }
+    .cvm-season-name { font-size:12px; font-weight:700; color:#fff; }
+    .cvm-season-meta { font-size:10px; color:#6b6b80; margin-top:3px; }
 
     /* ── New Season/Episode Grid (All Seasons at once) ── */
-    .cvm-season-block { margin-bottom: 25px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 20px; animation: cvmFadeUp 0.5s ease both; }
-    .cvm-season-header { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px;}
-    .cv-episode-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:12px; }
-    .cv-episode-btn { display:flex; flex-direction:column; gap:6px; padding:12px 14px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; color:#e5e5e5; cursor:pointer; text-align:left; transition:all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-family:inherit; position: relative; overflow: hidden; }
-    .cv-episode-btn:hover { background:rgba(229,9,20,0.15); border-color:#e50914; transform:translateY(-3px); box-shadow: 0 5px 15px rgba(229,9,20,0.2); }
-    .cv-episode-btn.cv-active { background:linear-gradient(135deg, rgba(229,9,20,0.4), rgba(178,7,16,0.6)); border-color:#e50914; box-shadow:0 0 20px rgba(229,9,20,0.5); animation: cvmPulse 2s infinite; }
-    .cv-ep-num { font-size:12px; font-weight:900; color:#22d3ee; text-transform:uppercase; letter-spacing: 0.5px; }
-    .cv-episode-btn.cv-active .cv-ep-num { color:#fff; text-shadow: 0 0 5px #fff; }
-    .cv-ep-name { font-size:13px; font-weight:600; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .cvm-season-block { margin-bottom: 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; }
+    .cvm-season-header { font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;}
+    .cv-episode-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:10px; }
+    .cv-episode-btn { display:flex; flex-direction:column; gap:4px; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:10px; color:#e5e5e5; cursor:pointer; text-align:left; transition:all 0.2s; font-family:inherit; }
+    .cv-episode-btn:hover { background:rgba(229,9,20,0.15); border-color:#e50914; transform:translateY(-2px); }
+    .cv-episode-btn.cv-active { background:rgba(229,9,20,0.3); border-color:#e50914; box-shadow:0 4px 15px rgba(229,9,20,0.3); }
+    .cv-ep-num { font-size:11px; font-weight:800; color:#22d3ee; text-transform:uppercase; }
+    .cv-episode-btn.cv-active .cv-ep-num { color:#fff; }
+    .cv-ep-name { font-size:12px; font-weight:600; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
     /* ── Actor Layer ── */
-    .cvm-actor-layer { margin:25px 0; padding:22px; background:linear-gradient(135deg,rgba(229,9,20,.08),rgba(34,211,238,.05)); border:1px solid rgba(229,9,20,.2); border-radius:18px; animation:cvmSlideDown .4s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-    .cvm-actor-layer-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
-    .cvm-actor-layer-name { font-size:18px; font-weight:800; color:#fff; }
-    .cvm-actor-close { background:rgba(255,255,255,.08); border:none; color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; transition: all 0.3s; }
-    .cvm-actor-close:hover { background:rgba(229,9,20,.8); transform: rotate(90deg) scale(1.1); }
-    .cvm-actor-bio { font-size:14px; color:#b3b3c4; line-height:1.7; margin-bottom:20px; }
+    .cvm-actor-layer { margin:24px 0; padding:20px; background:linear-gradient(135deg,rgba(229,9,20,.05),rgba(34,211,238,.03)); border:1px solid rgba(229,9,20,.15); border-radius:16px; animation:cvmSlideDown .4s ease; }
+    .cvm-actor-layer-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+    .cvm-actor-layer-name { font-size:16px; font-weight:800; color:#fff; }
+    .cvm-actor-close { background:rgba(255,255,255,.08); border:none; color:#fff; width:32px; height:32px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    .cvm-actor-close:hover { background:rgba(229,9,20,.5); }
+    .cvm-actor-bio { font-size:13px; color:#b3b3c4; line-height:1.6; margin-bottom:16px; }
 
     /* ── Animations ── */
-    @keyframes cvmFadeUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
-    @keyframes cvmSlideDown { from { opacity:0; transform:translateY(-30px); } to { opacity:1; transform:translateY(0); } }
-    @keyframes cvmKenBurns { 0% { transform:scale(1) translate(0,0); } 50% { transform:scale(1.1) translate(-1%,-1%); } 100% { transform:scale(1) translate(0,0); } }
+    @keyframes cvmFadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes cvmSlideDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes cvmKenBurns { 0% { transform:scale(1) translate(0,0); } 50% { transform:scale(1.08) translate(-1%,-1%); } 100% { transform:scale(1) translate(0,0); } }
     @keyframes cvmRingFill { to { stroke-dashoffset: var(--target-offset,0); } }
-    @keyframes cvmPulse { 0% { box-shadow: 0 0 0 0 rgba(229,9,20,0.7); } 70% { box-shadow: 0 0 0 15px rgba(229,9,20,0); } 100% { box-shadow: 0 0 0 0 rgba(229,9,20,0); } }
     
     @media (max-width:768px) {
-      .cvm-quick-stats { gap:12px; justify-content: center; }
-      .cvm-stat-card { min-width:95px; padding:15px; }
-      .cvm-rating-ring { width: 60px; height: 60px; }
-      .cvm-rating-ring .ring-value { font-size: 16px; }
-      .cvm-cast-grid { grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:12px; }
+      .cvm-quick-stats { gap:10px; }
+      .cvm-stat-card { min-width:80px; padding:15px; }
+      .cvm-rating-ring { width: 50px; height: 50px; }
+      .cvm-rating-ring .ring-value { font-size: 14px; }
+      .cvm-cast-grid { grid-template-columns:repeat(auto-fill,minmax(85px,1fr)); gap:10px; }
       .cvm-bento-grid { grid-template-columns:1fr; }
       .cv-episode-grid { grid-template-columns:repeat(2, 1fr); }
     }
@@ -256,7 +239,7 @@ var CVModal = {
       this._renderHero(data, omdb, myId);
       this._renderQuickStats(data, omdb, myId);
       this._renderStoryline(data, myId);
-      this._renderRichDetails(data, omdb, watchmode, myId); // Upgraded Rich Details
+      this._renderImdbDetails(data, omdb, watchmode, myId);
       this._renderCast(data, myId);
       this._renderCrew(data, myId);
       this._renderVideos(data, myId);
@@ -303,28 +286,29 @@ var CVModal = {
     if (backdrops.length > 0 && heroImg) {
       var idx = 0;
       heroImg.src = 'https://image.tmdb.org/t/p/w1280' + backdrops[0].file_path;
-      heroImg.style.animation = 'cvmKenBurns 25s ease-in-out infinite';
+      heroImg.style.animation = 'cvmKenBurns 22s ease-in-out infinite';
       if (backdrops.length > 1) {
         this.heroInterval = setInterval(function() {
           if (myId !== self._renderId) { clearInterval(self.heroInterval); return; }
           idx = (idx + 1) % backdrops.length;
-          heroImg.style.opacity = '0.2';
-          setTimeout(function() { if (myId !== self._renderId) return; heroImg.src = 'https://image.tmdb.org/t/p/w1280' + backdrops[idx].file_path; heroImg.style.opacity = '1'; }, 400);
-        }, 6000);
+          heroImg.style.opacity = '0.3';
+          setTimeout(function() { if (myId !== self._renderId) return; heroImg.src = 'https://image.tmdb.org/t/p/w1280' + backdrops[idx].file_path; heroImg.style.opacity = '1'; }, 350);
+        }, 5000);
       }
     } else if (data.backdrop_path && heroImg) { heroImg.src = 'https://image.tmdb.org/t/p/w1280' + data.backdrop_path; }
     if (data.poster_path && posterEl) posterEl.src = 'https://image.tmdb.org/t/p/w500' + data.poster_path;
     if (titleEl) titleEl.textContent = data.title || data.name || 'Untitled';
 
-    // Uniform Premium Red Buttons
+    // Fix Buttons Uniformity & Keep Old Logic (Merge Feature)
     setTimeout(function normalizeActionButtons() {
       var dlLeft = document.getElementById('btn-download-left');
       var dlRight = document.getElementById('btn-download-right');
       if (!dlLeft || !dlRight) return;
       dlLeft.removeAttribute('style'); dlRight.removeAttribute('style');
       
-      dlLeft.className = 'cv-btn-play cv-btn-watch'; 
-      dlRight.className = 'cv-btn-play cv-btn-watch'; 
+      // Use old classes but CSS makes them red
+      dlLeft.className = 'cv-btn-play cv-btn-download'; 
+      dlRight.className = 'cv-btn-play cv-btn-download'; 
       
       var parent = dlLeft.parentElement;
       if (parent) {
@@ -337,6 +321,7 @@ var CVModal = {
         var id = CVModal.current.id;
         var tmdbUrl = 'https://www.themoviedb.org/' + type + '/' + id + '/watch';
         
+        // Old Logic for click handlers
         dlLeft.onclick = function () { window.open(tmdbUrl, '_blank'); };
         dlRight.onclick = function () { window.open(tmdbUrl, '_blank'); };
       }
@@ -364,27 +349,22 @@ var CVModal = {
     if (omdb && omdb.Ratings) { omdb.Ratings.forEach(function(r) { if (r.Source === 'Rotten Tomatoes') rtR = parseFloat(r.Value) / 10; }); }
     if (omdb && omdb.Metascore && omdb.Metascore !== 'N/A') metaR = parseFloat(omdb.Metascore) / 10;
 
-    // Check for AniList/Jikan/MAL ratings
-    var malR = data.jikan && data.jikan.score ? parseFloat(data.jikan.score) : (data.anilist && data.anilist.averageScore ? data.anilist.averageScore / 10 : 0);
-    var anilistR = data.anilist && data.anilist.averageScore ? data.anilist.averageScore / 10 : 0;
-
     var stats = [];
     if (tmdbR > 0) stats.push({ label: 'TMDB', v: tmdbR, color: '#01b4e4' });
     if (imdbR > 0) stats.push({ label: 'IMDb', v: imdbR, color: '#f5c518' });
-    if (malR > 0) stats.push({ label: 'MAL', v: malR, color: '#2e51a2' });
     if (rtR > 0) stats.push({ label: 'Rotten', v: rtR, color: '#fa3232' });
     if (metaR > 0) stats.push({ label: 'Meta', v: metaR, color: '#66cc33' });
 
     var html = '<div class="cvm-quick-stats">';
-    var C = 2 * Math.PI * 32; // Bigger ring
+    var C = 2 * Math.PI * 28; 
     stats.forEach(function(s) {
       var off = C - (s.v / 10) * C;
-      html += '<div class="cvm-stat-card"><div class="cvm-rating-ring"><svg width="80" height="80" viewBox="0 0 80 80"><circle class="ring-bg" cx="40" cy="40" r="32"/><circle class="ring-fill" cx="40" cy="40" r="32" style="stroke:' + s.color + '; stroke-dasharray:' + C + '; stroke-dashoffset:' + C + '; animation:cvmRingFill 1.8s ease-out forwards; --target-offset:' + off + '; filter: drop-shadow(0 0 8px ' + s.color + ');"/></svg><div class="ring-value" style="color:' + s.color + ';">' + s.v.toFixed(1) + '</div></div><div class="cvm-stat-label">' + s.label + '</div></div>';
+      html += '<div class="cvm-stat-card"><div class="cvm-rating-ring"><svg width="70" height="70" viewBox="0 0 70 70"><circle class="ring-bg" cx="35" cy="35" r="28"/><circle class="ring-fill" cx="35" cy="35" r="28" style="stroke:' + s.color + '; stroke-dasharray:' + C + '; stroke-dashoffset:' + C + '; animation:cvmRingFill 1.5s ease-out forwards; --target-offset:' + off + '; filter: drop-shadow(0 0 6px ' + s.color + ');"/></svg><div class="ring-value" style="color:' + s.color + ';">' + s.v.toFixed(1) + '</div></div><div class="cvm-stat-label">' + s.label + '</div></div>';
     });
     if (data.vote_count) html += '<div class="cvm-stat-card"><div class="cvm-stat-num" data-target="' + data.vote_count + '">0</div><div class="cvm-stat-label">Votes</div></div>';
     html += '</div>';
     metaEl.insertAdjacentHTML('afterend', html);
-    setTimeout(function() { document.querySelectorAll('.cvm-stat-num').forEach(function(el) { CVM.animateCounter(el, 0, parseInt(el.dataset.target) || 0, 1800); }); }, 100);
+    setTimeout(function() { document.querySelectorAll('.cvm-stat-num').forEach(function(el) { CVM.animateCounter(el, 0, parseInt(el.dataset.target) || 0, 1500); }); }, 100);
   },
 
   _renderStoryline: function(data, myId) {
@@ -398,50 +378,36 @@ var CVModal = {
     if (kwList.length > 0) {
       var existing = document.querySelector('.cvm-keywords'); if (existing) existing.remove();
       var kHtml = '<div class="cvm-keywords"><div class="cvm-keywords-label"><i class="fas fa-tags"></i> Keywords</div><div class="cvm-keywords-list">';
-      kwList.slice(0, 15).forEach(function(k, i) { kHtml += '<span class="cvm-keyword" style="animation-delay:' + (i * 50) + 'ms;">' + CVM.esc(k.name) + '</span>'; });
+      kwList.slice(0, 15).forEach(function(k, i) { kHtml += '<span class="cvm-keyword" style="animation-delay:' + (i * 40) + 'ms;">' + CVM.esc(k.name) + '</span>'; });
       kHtml += '</div></div>'; descEl.parentNode.insertAdjacentHTML('beforeend', kHtml);
     }
     var genresEl = document.getElementById('cv-m-genres');
     if (genresEl && data.genres && data.genres.length) { genresEl.innerHTML = data.genres.map(function(g) { return '<span class="cvm-genre-chip">' + CVM.esc(g.name) + '</span>'; }).join(''); }
   },
 
-  _renderRichDetails: function(data, omdb, watchmode, myId) {
+  _renderImdbDetails: function(data, omdb, watchmode, myId) {
     var container = document.getElementById('cv-imdb-info'); if (!container) return;
     container.style.display = 'block';
     
     var director = data.credits && data.credits.crew ? (data.credits.crew.find(function(c) { return c.job === 'Director'; }) || {}).name : null;
     var html = '';
 
-    // 1. Awards Section (OMDb)
     if (omdb && omdb.Awards && omdb.Awards !== 'N/A') {
-      html += '<div class="cvm-glass-card cvm-awards-section" style="grid-column:1/-1; border-left: 4px solid #ffc107; background: linear-gradient(135deg, rgba(255,193,7,0.1), rgba(15,17,22,0.95));"><div class="cvm-section-heading"><i class="fas fa-trophy" style="color:#ffc107;"></i> Awards & Achievements</div><div style="color:#ffd700;font-weight:600;font-size:16px;line-height:1.7;">' + CVM.esc(omdb.Awards) + '</div></div>';
+      html += '<div class="cvm-glass-card cvm-awards-section" style="grid-column:1/-1; border-left: 4px solid #ffc107;"><div class="cvm-section-heading"><i class="fas fa-trophy" style="color:#ffc107;"></i> Awards & Achievements</div><div style="color:#ffd700;font-weight:600;font-size:15px;line-height:1.6;">' + CVM.esc(omdb.Awards) + '</div></div>';
     }
 
-    // 2. Main Details & Specs (TMDB + OMDb + TVmaze)
+    // Rich Detailed Bento Grid
     html += '<div class="cvm-glass-card"><div class="cvm-section-heading"><i class="fas fa-info-circle" style="color:#22d3ee;"></i> Details & Specs</div><div class="cvm-info-grid">';
     var details = [
-      { label: 'Release Date', value: data.release_date || data.first_air_date, icon: 'fa-calendar' },
+      { label: 'Release', value: data.release_date || data.first_air_date, icon: 'fa-calendar' },
       { label: 'Status', value: data.status, icon: 'fa-info' },
       { label: 'Country', value: (data.production_countries || []).map(function(c){ return c.name; }).join(', '), icon: 'fa-globe' },
       { label: 'Director', value: director, icon: 'fa-video' },
       { label: 'Runtime', value: omdb && omdb.Runtime !== 'N/A' ? omdb.Runtime : (data.runtime ? CVM.fmtRuntime(data.runtime) : null), icon: 'fa-clock' },
       { label: 'Rated', value: omdb && omdb.Rated !== 'N/A' ? omdb.Rated : 'N/A', icon: 'fa-certificate' },
       { label: 'Language', value: omdb && omdb.Language !== 'N/A' ? omdb.Language : (data.original_language ? data.original_language.toUpperCase() : null), icon: 'fa-language' },
-      { label: 'Studio', value: (data.production_companies || []).slice(0,2).map(function(c){ return c.name; }).join(', '), icon: 'fa-building' }
+      { label: 'Production', value: (data.production_companies || []).slice(0,2).map(function(c){ return c.name; }).join(', '), icon: 'fa-building' }
     ];
-
-    // Add TVmaze Data if exists
-    if (data.tvmaze && data.tvmaze.network) {
-      details.push({ label: 'Network', value: data.tvmaze.network.name, icon: 'fa-tv' });
-      details.push({ label: 'Schedule', value: data.tvmaze.schedule ? data.tvmaze.schedule.days.join(', ') : '', icon: 'fa-calendar-day' });
-    }
-
-    // Add Anime Data (Jikan / Kitsu) if exists
-    if (data.jikan) {
-      if (data.jikan.studios && data.jikan.studios.length) details.push({ label: 'Anime Studio', value: data.jikan.studios[0].name, icon: 'fa-paint-brush' });
-      if (data.jikan.source) details.push({ label: 'Source', value: data.jikan.source, icon: 'fa-book' });
-    }
-
     var delay = 0.1;
     details.forEach(function(d) { 
       if (d.value && d.value !== '—') { 
@@ -451,7 +417,6 @@ var CVModal = {
     });
     html += '</div></div>';
 
-    // 3. Box Office (TMDB / OMDb)
     var budget = data.budget || 0;
     var revenue = data.revenue || 0;
     if (omdb && omdb.BoxOffice && omdb.BoxOffice.indexOf('$') >= 0) { var rt = omdb.BoxOffice.replace(/[^0-9]/g, ''); if (rt) revenue = parseInt(rt); }
@@ -462,17 +427,7 @@ var CVModal = {
       html += '</div></div>';
     }
 
-    // 4. API Data Sources Indicator
-    html += '<div class="cvm-glass-card" style="grid-column:1/-1; padding: 15px 25px;"><div style="display:flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">';
-    html += '<div style="font-size: 13px; font-weight: 700; color: #888;">DATA AGGREGATED FROM:</div>';
-    html += '<div class="cvm-api-sources">';
-    var sources = ['TMDB', 'OMDb'];
-    if (data.jikan || data.anilist || data.mal) sources.push('Jikan', 'AniList');
-    if (data.tvmaze) sources.push('TVmaze');
-    if (data.kitsu) sources.push('Kitsu');
-    if (watchmode) sources.push('Watchmode');
-    sources.forEach(function(src) { html += '<span class="cvm-api-tag">' + src + '</span>'; });
-    html += '</div></div></div>';
+    // "Where to Watch" is completely REMOVED as requested.
 
     container.innerHTML = '<div class="cvm-bento-grid">' + html + '</div>';
   },
@@ -484,7 +439,7 @@ var CVModal = {
     scroll.className = 'cvm-cast-grid'; scroll.innerHTML = '';
     cast.slice(0, 25).forEach(function(c, i) {
       var img = c.profile_path ? 'https://image.tmdb.org/t/p/w185' + c.profile_path : 'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Ccircle fill=%22%23333%22 cx=%2250%22 cy=%2250%22 r=%2250%22/%3E%3C/svg%3E';
-      var el = document.createElement('div'); el.className = 'cvm-cast-card'; el.style.animationDelay = (i * 50) + 'ms';
+      var el = document.createElement('div'); el.className = 'cvm-cast-card'; el.style.animationDelay = (i * 40) + 'ms';
       el.innerHTML = '<div class="cvm-cast-img-wrap"><img src="' + img + '" alt="' + CVM.esc(c.name) + '" loading="lazy"></div><div class="cvm-cast-info"><div class="cvm-cast-name">' + CVM.esc(c.name) + '</div><div class="cvm-cast-role">' + CVM.esc(c.character || '') + '</div></div>';
       el.onclick = function() { if (window.CVActor) CVActor.load(c.id, c.name); };
       scroll.appendChild(el);
@@ -499,8 +454,8 @@ var CVModal = {
     var byRole = {};
     crew.forEach(function(c) { if (keyRoles.indexOf(c.job) >= 0) { if (!byRole[c.job]) byRole[c.job] = []; byRole[c.job].push(c); } });
     var roles = Object.keys(byRole); if (roles.length === 0) return;
-    var html = '<div class="cvm-crew-section"><div class="cvm-section-heading"><i class="fas fa-users-cog"></i> Key Crew</div><div class="cvm-crew-grid">';
-    roles.forEach(function(role) { var people = byRole[role].slice(0, 3); html += '<div class="cvm-crew-item"><div class="cvm-crew-role">' + CVM.esc(role) + '</div><div class="cvm-crew-names">' + people.map(function(p){ return CVM.esc(p.name); }).join(', ') + '</div></div>'; });
+    var html = '<div class="cvm-crew-section"><div class="cvm-section-heading"><i class="fas fa-users-cog"></i> Key Crew</div><div class="cvm-info-grid">';
+    roles.forEach(function(role) { var people = byRole[role].slice(0, 3); html += '<div class="cvm-info-item"><div class="cvm-info-label">' + CVM.esc(role) + '</div><div class="cvm-info-value">' + people.map(function(p){ return CVM.esc(p.name); }).join(', ') + '</div></div>'; });
     html += '</div></div>';
     castGrid.parentNode.insertAdjacentHTML('afterend', html);
   },
@@ -525,12 +480,10 @@ var CVModal = {
     var backdrops = data.images && data.images.backdrops ? data.images.backdrops : [];
     var wrap = document.getElementById('cv-image-gallery'); var container = document.getElementById('cv-gallery-container'); if (!wrap || !container) return;
     if (backdrops.length === 0) { wrap.style.display = 'none'; return; }
-    var self = this; container.innerHTML = ''; container.style.display = 'flex'; container.style.gap = '12px'; container.style.overflowX = 'auto'; container.style.paddingBottom = '10px';
+    var self = this; container.innerHTML = ''; container.style.display = 'flex'; container.style.gap = '10px'; container.style.overflowX = 'auto';
     backdrops.slice(0, 15).forEach(function(img, i) {
-      var el = document.createElement('img'); el.src = 'https://image.tmdb.org/t/p/w780' + img.file_path; el.style.cssText = 'height:140px; width:240px; border-radius:12px; object-fit:cover; cursor:pointer; flex-shrink:0; transition: transform 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.3);';
-      el.onmouseover = function() { this.style.transform = 'scale(1.05)'; };
-      el.onmouseout = function() { this.style.transform = 'scale(1)'; };
-      el.onclick = function() { var hero = document.getElementById('cv-m-hero-img'); if (hero) { if (self.heroInterval) clearInterval(self.heroInterval); hero.src = 'https://image.tmdb.org/t/p/w1280' + img.file_path; hero.style.animation = 'cvmKenBurns 20s ease-in-out'; } };
+      var el = document.createElement('img'); el.src = 'https://image.tmdb.org/t/p/w780' + img.file_path; el.style.cssText = 'height:120px; width:200px; border-radius:10px; object-fit:cover; cursor:pointer; flex-shrink:0;';
+      el.onclick = function() { var hero = document.getElementById('cv-m-hero-img'); if (hero) { if (self.heroInterval) clearInterval(self.heroInterval); hero.src = 'https://image.tmdb.org/t/p/w1280' + img.file_path; hero.style.animation = 'cvmKenBurns 18s ease-in-out'; } };
       container.appendChild(el);
     });
     wrap.style.display = 'block';
@@ -541,9 +494,9 @@ var CVModal = {
     var existing = document.querySelector('.cvm-reviews-section'); if (existing) existing.remove();
     var html = '<div class="cvm-reviews-section"><div class="cvm-section-heading"><i class="fas fa-comments"></i> Reviews</div><div class="cvm-reviews-list">';
     reviews.slice(0, 3).forEach(function(r, i) {
-      var content = r.content || ''; var short = content.length > 450 ? content.substring(0, 450) + '...' : content;
+      var content = r.content || ''; var short = content.length > 400 ? content.substring(0, 400) + '...' : content;
       var rating = r.author_details && r.author_details.rating ? r.author_details.rating : null;
-      html += '<div class="cvm-review-card"><div class="cvm-review-header"><div class="cvm-review-avatar" style="display:flex;align-items:center;justify-content:center;"><i class="fas fa-user"></i></div><div><div class="cvm-review-author">' + CVM.esc(r.author) + '</div>' + (rating ? '<div class="cvm-review-rating"><i class="fas fa-star"></i> ' + rating + '/10</div>' : '') + '</div></div><div class="cvm-review-content">' + CVM.esc(short) + '</div></div>';
+      html += '<div class="cvm-review-card"><div class="cvm-review-header"><div class="cvm-review-avatar" style="background:#333;display:flex;align-items:center;justify-content:center;"><i class="fas fa-user"></i></div><div><div class="cvm-review-author">' + CVM.esc(r.author) + '</div>' + (rating ? '<div class="cvm-review-rating"><i class="fas fa-star"></i> ' + rating + '/10</div>' : '') + '</div></div><div class="cvm-review-content">' + CVM.esc(short) + '</div></div>';
     });
     html += '</div></div>';
     var recsWrap = document.getElementById('cv-recs-wrap');
@@ -555,7 +508,7 @@ var CVModal = {
     var seasons = data.seasons || []; if (seasons.length === 0) return;
     var existing = document.querySelector('.cvm-seasons-section'); if (existing) existing.remove();
     var castGrid = document.getElementById('cv-cast-scroll'); var insertAfter = (castGrid && castGrid.parentNode) || null; if (!insertAfter) return;
-    var html = '<div class="cvm-seasons-section"><div class="cvm-section-heading"><i class="fas fa-list-ol"></i> Seasons Overview</div><div class="cvm-seasons-grid">';
+    var html = '<div class="cvm-seasons-section"><div class="cvm-section-heading"><i class="fas fa-list-ol"></i> Seasons</div><div class="cvm-seasons-grid">';
     seasons.forEach(function(s, i) {
       if (s.season_number === 0) return; var poster = s.poster_path ? 'https://image.tmdb.org/t/p/w185' + s.poster_path : null;
       html += '<div class="cvm-season-card">' + (poster ? '<img class="cvm-season-poster" src="' + poster + '" loading="lazy" alt="">' : '') + '<div class="cvm-season-info"><div class="cvm-season-name">' + CVM.esc(s.name) + '</div><div class="cvm-season-meta">' + (s.episode_count || 0) + ' eps</div></div></div>';
@@ -612,7 +565,7 @@ var CVModal = {
     var cast = data.credits ? data.credits.cast : []; if (!cast || cast.length === 0) return;
     var actor = cast[0]; var wrap = document.getElementById('cv-main-actor-wrap'); var grid = document.getElementById('cv-main-actor-grid'); var title = document.getElementById('cv-main-actor-title'); if (!wrap || !grid || !title) return;
     title.innerHTML = '<i class="fas fa-user-tie"></i> More from ' + CVM.esc(actor.name);
-    grid.innerHTML = '<div style="color:#888;padding:20px;"><i class="fas fa-spinner fa-spin"></i> Loading...</div>'; wrap.style.display = 'block';
+    grid.innerHTML = '<div style="color:#888;padding:15px;"><i class="fas fa-spinner fa-spin"></i> Loading...</div>'; wrap.style.display = 'block';
     var result = await CVAPI.tmdb('/person/' + actor.id + '/movie_credits', {});
     if (myId !== this._renderId) return;
     if (result && result.cast) {
@@ -644,7 +597,7 @@ var CVActor = {
     stack.appendChild(layer);
     
     var bio = await CVAPI.tmdb('/person/' + personId, {}); if (myRenderId !== CVModal._renderId || !document.getElementById(layerId)) return;
-    var bioEl = document.getElementById('bio-' + personId); if (bioEl) bioEl.textContent = bio && bio.biography ? (bio.biography.length > 300 ? bio.biography.substring(0, 300) + '...' : bio.biography) : 'No biography available.';
+    var bioEl = document.getElementById('bio-' + personId); if (bioEl) bioEl.textContent = bio && bio.biography ? (bio.biography.length > 250 ? bio.biography.substring(0, 250) + '...' : bio.biography) : 'No biography available.';
     
     var credits = await CVAPI.tmdb('/person/' + personId + '/combined_credits', {}); if (myRenderId !== CVModal._renderId || !document.getElementById(layerId)) return;
     var moviesEl = document.getElementById('movies-' + personId);
@@ -661,7 +614,7 @@ var CVActor = {
 };
 
 /* ═══════════════════════════════════════════════
-   5. PLAYER — v6 (Episode-Specific Server Auto-Detection)
+   5. PLAYER — v5 MERGED (All Seasons Grid + Auto-Health Check)
 ═══════════════════════════════════════════════ */
 var CVPlayer = {
   activeServer: 0,
@@ -692,7 +645,7 @@ var CVPlayer = {
     var self = this;
     var health = window.CVServerHealth;
 
-    // Sort servers: Working ones first
+    // Sort servers so working ones come first (Feature 4)
     var sortedServers = [...window.CV_SERVERS].sort(function(a, b) {
       var aWorking = health && health.workingServers && health.workingServers.some(function(w){ return w.id === a.id; }) ? 1 : 0;
       var bWorking = health && health.workingServers && health.workingServers.some(function(w){ return w.id === b.id; }) ? 1 : 0;
@@ -733,35 +686,28 @@ var CVPlayer = {
     var s = document.getElementById('cv-player-section');
     if (s) { s.style.display = 'block'; s.classList.add('cv-active'); }
 
-    // Load all seasons in grid
+    // ১. TV হলে সব সিজন একসাথে দেখাও (No Dropdown)
     if (CVModal.current && CVModal.current.type === 'tv') {
       this._renderAllSeasons(CVModal.current.id, CVModal.current.data);
     }
 
-    // Initial Health Check
+    // ২. Auto-Health Check
     if (!this._serverTestingDone) {
       this._serverTestingDone = true;
-      await this._checkServersForEpisode(this.currentSeason, this.currentEpisode);
+      var health = window.CVServerHealth;
+      if (health && typeof health.testAll === 'function' && CVModal.current) {
+        var tabs = document.getElementById('cv-server-tabs');
+        if (tabs) tabs.innerHTML = '<div style="color:#aaa;font-size:12px;padding:10px;"><i class="fas fa-spinner fa-spin"></i> Checking best servers...</div>';
+        try {
+          await health.testAll(CVModal.current.type, CVModal.current.id, this.currentSeason, this.currentEpisode);
+        } catch(e) { console.warn('[CVPlayer] Health check failed:', e); }
+        this._renderServerTabs();
+      } else {
+        this._renderServerTabs();
+      }
     }
 
     this.load(true);
-  },
-
-  // NEW: Background Server Check specific to an episode
-  _checkServersForEpisode: async function(season, episode) {
-    var health = window.CVServerHealth;
-    if (!health || typeof health.testAll !== 'function' || !CVModal.current) {
-      this._renderServerTabs(); return;
-    }
-
-    var tabs = document.getElementById('cv-server-tabs');
-    if (tabs) tabs.innerHTML = '<div style="color:#aaa;font-size:13px;padding:15px;display:flex;align-items:center;gap:10px;"><i class="fas fa-spinner fa-spin"></i> Checking servers for S' + season + ' E' + episode + '...</div>';
-
-    try {
-      await health.testAll(CVModal.current.type, CVModal.current.id, season, episode);
-    } catch(e) { console.warn('[CVPlayer] Health check failed:', e); }
-
-    this._renderServerTabs();
   },
 
   _renderAllSeasons: async function(tvId, data) {
@@ -771,7 +717,7 @@ var CVPlayer = {
       if (!player) return;
       wrap = document.createElement('div');
       wrap.id = 'cv-tv-selector';
-      wrap.style.cssText = 'margin-bottom:25px; display:block;';
+      wrap.style.cssText = 'margin-bottom:20px; display:block;';
       var tabs = document.getElementById('cv-server-tabs');
       if (tabs && tabs.parentNode) tabs.parentNode.insertBefore(wrap, tabs);
       else player.insertBefore(wrap, player.firstChild);
@@ -788,11 +734,11 @@ var CVPlayer = {
     validSeasons.forEach(function(s) {
       html += `<div class="cvm-season-block" id="season-block-${s.season_number}">
                  <div class="cvm-season-header">
-                   <span><i class="fas fa-list-ol" style="color:#e50914; margin-right:10px;"></i> ${CVM.esc(s.name)}</span>
-                   <span style="font-size:12px; color:#22d3ee; background:rgba(34,211,238,0.1); padding:4px 10px; border-radius:12px; font-weight:700;">${s.episode_count || 0} Episodes</span>
+                   <span><i class="fas fa-list-ol" style="color:#e50914; margin-right:8px;"></i> ${CVM.esc(s.name)}</span>
+                   <span style="font-size:12px; color:#22d3ee; background:rgba(34,211,238,0.1); padding:3px 8px; border-radius:10px;">${s.episode_count || 0} Episodes</span>
                  </div>
                  <div class="cv-episode-grid" id="ep-grid-${s.season_number}">
-                   <div style="color:#888;padding:15px;text-align:center;"><i class="fas fa-spinner fa-spin"></i> Loading episodes...</div>
+                   <div style="color:#888;padding:10px;text-align:center;"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
                  </div>
                </div>`;
     });
@@ -824,7 +770,7 @@ var CVPlayer = {
         }
         grid.innerHTML = html;
       } else {
-        grid.innerHTML = '<div style="color:#888;padding:15px;">No episodes found.</div>';
+        grid.innerHTML = '<div style="color:#888;padding:10px;">No episodes found.</div>';
       }
       return;
     }
@@ -833,8 +779,8 @@ var CVPlayer = {
     data.episodes.forEach(function(ep) {
       var stillUrl = ep.still_path ? 'https://image.tmdb.org/t/p/w300' + ep.still_path : null;
       html += '<button class="cv-episode-btn" onclick="CVPlayer.selectEpisode(' + seasonNum + ', ' + ep.episode_number + ', this)">' +
-        (stillUrl ? '<div class="cv-ep-thumb" style="width:100%;height:70px;border-radius:8px;background-size:cover;background-position:center;margin-bottom:8px;background-image:url(\'' + stillUrl + '\'); box-shadow: 0 4px 10px rgba(0,0,0,0.5);"></div>' : '') +
-        '<span class="cv-ep-num">S' + seasonNum + ' E' + ep.episode_number + '</span>' +
+        (stillUrl ? '<div class="cv-ep-thumb" style="width:100%;height:60px;border-radius:6px;background-size:cover;background-position:center;margin-bottom:6px;background-image:url(\'' + stillUrl + '\')"></div>' : '') +
+        '<span class="cv-ep-num">E' + ep.episode_number + '</span>' +
         '<span class="cv-ep-name">' + CVM.esc(ep.name || ('Episode ' + ep.episode_number)) + '</span>' +
         '</button>';
     });
@@ -845,19 +791,14 @@ var CVPlayer = {
     this.currentSeason = season;
     this.currentEpisode = episode;
     
-    // Immediate Visual Change (Color transition)
     document.querySelectorAll('.cv-episode-btn').forEach(function(b) { b.classList.remove('cv-active'); });
     if (btnElement) btnElement.classList.add('cv-active');
     
-    // Scroll slightly up to show the player
+    this.load(false);
+    this._serverTestingDone = false; // Re-check servers for the new episode
+    
     var playerWrap = document.getElementById('cv-player-section');
     if (playerWrap) playerWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-    // Trigger Background Server Auto-Detection for this episode
-    this._serverTestingDone = false;
-    this._checkServersForEpisode(season, episode).then(() => {
-      this.load(true);
-    });
   },
 
   load: function(allowFailover) {
@@ -925,6 +866,6 @@ window.addEventListener('popstate', function(e) {
   else { CVModal.close(true); var fp = document.getElementById('cv-full-page'); if (fp && fp.classList.contains('active') && window.CVCategory) CVCategory.closeFullPage(true); }
 });
 
-console.info('[CineVault] ✓ Part 1 v8 Ultimate loaded — Red Buttons Restored, Rich APIs Merged, Episode Auto-Detect Active');
+console.info('[CineVault] ✓ Part 1 v7 Merged Final loaded — Nothing Lost, Everything Gained');
 //]]>
 </script>
